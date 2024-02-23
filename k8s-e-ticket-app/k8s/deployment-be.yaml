@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eticket-be-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eticker-be  
+  template:
+    metadata:
+      labels:
+        app: eticker-be
+    spec:
+      containers:
+      - name: ieticker-be
+        image: nasirnjs/eticker-be:0.0.4
+        ports:
+        - containerPort: 7001

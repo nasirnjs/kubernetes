@@ -1,0 +1,14 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks
+  region: us-east-2
+
+nodeGroups:
+  - name: ng-1
+    minSize: 1
+    maxSize: 4
+    instanceType: c5d.large
+    tags:
+      Environment: Production

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus Ticket</title>
+    <style>
+      .ticket {
+        width: 300px;
+        padding: 20px;
+        border: 2px solid #0059b3;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .ticket-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .ticket-header h2 {
+        color: #0059b3;
+        margin: 0;
+      }
+
+      .ticket-info {
+        margin-bottom: 15px;
+      }
+
+      .ticket-info p {
+        margin: 5px 0;
+        line-height: 1.5;
+      }
+
+      .ticket-info span {
+        font-weight: bold;
+      }
+
+      .ticket-footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #888888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ticket">
+      <div class="ticket-header">
+        <h2>Bus Ticket</h2>
+      </div>
+      <div class="ticket-info">
+        <p><span>Passenger Name:</span> <%= passengerName %></p>
+        <p><span>Departure Time:</span> <%= departureTime %></p>
+        <p><span>Seat Number:</span> <%= seatNumber %></p>
+        <p><span>Destination:</span> <%= destination %></p>
+        <p><span>Amount:</span> <%= totalAmount %></p>
+      </div>
+      <div class="ticket-footer">
+        <p>Thank you for choosing our service!</p>
+      </div>
+    </div>
+  </body>
+</html>

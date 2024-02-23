@@ -1,0 +1,4 @@
+.env
+my-data/
+database/
+eticket-be/.env

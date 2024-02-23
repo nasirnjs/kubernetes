@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eticket-fe-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eticker-fe
+  template:
+    metadata:
+      labels:
+        app: eticker-fe
+    spec:
+      containers:
+      - name: ieticker-fe
+        image: nasirnjs/eticker-fe:0.0.14
+        ports:
+        - containerPort: 3000

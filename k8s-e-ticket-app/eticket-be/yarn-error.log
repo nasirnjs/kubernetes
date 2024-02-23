@@ -1,0 +1,41 @@
+Arguments: 
+  /home/aasourav/.nvm/versions/node/v16.19.0/bin/node /home/aasourav/.nvm/versions/node/v16.19.0/bin/yarn add bcryptjs cookie-parser cors dotenv express ioreadis jsonwebtoken mongoose ts-node-dev @types/bcryptjs @types/cookie-parser @types/cors @types/express @types/jsonwebtoken @types/node typescript
+
+PATH: 
+  /usr/local/lib/nodejs/node-v18.12.1-linux-x64/bin/:/home/aasourav/miniconda3/bin:/home/aasourav/.nvm/versions/node/v16.19.0/bin:/usr/local/lib/nodejs/node-v18.12.1-linux-x64/bin/:/usr/local/lib/nodejs/node-v18.12.1-linux-x64/bin/:/home/aasourav/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/lib/nodejs/node-v18.12.1-linux-x64/bin/:/usr/local/lib/nodejs/node-v18.12.1-linux-x64/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/aasourav/.dotnet/tools:/usr/local/mongodb/bin:/usr/local/go/bin:/usr/local/mongodb/bin:/usr/local/go/bin:/home/aasourav/Android/Sdk/emulator:/home/aasourav/Android/Sdk/platform-tools:/home/aasourav/.yarn/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.19.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/ioreadis: Not found
+      at Request.params.callback [as _callback] (/home/aasourav/.nvm/versions/node/v16.19.0/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at Request.self.callback (/home/aasourav/.nvm/versions/node/v16.19.0/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (/home/aasourav/.nvm/versions/node/v16.19.0/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (/home/aasourav/.nvm/versions/node/v16.19.0/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1358:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "lms-project",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
