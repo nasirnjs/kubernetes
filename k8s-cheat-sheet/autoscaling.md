@@ -1,4 +1,5 @@
  Scalability is one of the core benefits of Kubernetes (K8s). In order to get the most out of this benefit (and use K8s effectively), you need a solid understanding of how Kubernetes autoscaling works.
+
  ## What is kubernetes autoscaler
  Autoscaling in Kubernetes refers to the automatic adjustment of resources in response to changes in workload demand. Kubernetes provides several mechanisms for autoscaling: 
 - Including Horizontal Pod Autoscaling (HPA)
@@ -16,3 +17,5 @@
 
 - Pod level: The HPA and VPA methods take place at the pod level. Both HPA and VPA will scale the available resources or instances of the container.
 - Cluster level: The Cluster Autoscaler falls under the Cluster level, where it scales up or down the number of nodes inside your cluster.
+
+**Horizontal Pod Autoscaling (HPA) Steps**
