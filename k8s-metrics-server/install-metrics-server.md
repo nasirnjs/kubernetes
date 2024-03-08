@@ -1,4 +1,4 @@
-<h2>Install k8s metrics server on a managed cluster or a self-managed Kubeadm cluster </h2>
+<h2>Install k8s metrics server on managed cluster or self-managed Kubeadm cluster </h2>
 
 **Tables of Contents**
 - [Installation Metrics Server](#installation-metrics-server)
