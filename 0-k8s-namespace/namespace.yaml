@@ -1,6 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Namespace
 metadata:
-  name: myapp
-  namespace: development
-...
+  name: development
+---
