@@ -55,7 +55,7 @@ List all pods in all namespaces, with more details.\
 
 ## kubectx tools
 
-**kubectx**  Streamlining Cluster Navigation Kubectx allows you to switch between Kubernetes clusters effortlessly.\
+**kubectx**  Streamlining Cluster Navigation Kubectx allows you to switch between Kubernetes clusters effortlessly.
 
 [Install Reference](https://github.com/ahmetb/kubectx) Stable versions of kubectx and kubens are small [bash scripts](https://github.com/ahmetb/kubectx?tab=readme-ov-file#manual-installation-macos-and-linux) that you can find in this repository
 
