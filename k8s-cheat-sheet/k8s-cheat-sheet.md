@@ -1,8 +1,4 @@
 
-<<<<<<< HEAD
-=======
-**Tables of Contents**
->>>>>>> 6349d8e (add table of contents)
 - [Kubernetes simple Nginx Pod](#kubernetes-simple-nginx-pod)
 - [`kubectl api-resources -o wide`](#kubectl-api-resources--o-wide)
 - [Deployment Declarative \& Imperative ways example](#deployment-declarative--imperative-ways-example)
@@ -11,10 +7,6 @@
 - [StatefulSet \& Headless Service](#statefulset--headless-service)
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6349d8e (add table of contents)
 ## Kubernetes simple Nginx Pod
 
 **Step 1: Create a YAML file named nginx-pod.yaml for for declarative way to create a pod**
