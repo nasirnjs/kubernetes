@@ -7,6 +7,9 @@
 - [What is ReplicaSets](#what-is-replicasets)
   - [Key Features:](#key-features)
 - [ReplicaSets Lab](#replicasets-lab)
+- [What is a Kubernetes Service?](#what-is-a-kubernetes-service)
+- [Why use a Kubernetes Service?](#why-use-a-kubernetes-service)
+- [Types of Kubernetes Services](#types-of-kubernetes-services)
 
 
 ## What is kubernetes api-resources
@@ -120,3 +123,46 @@ Scale the ReplicaSet to 5 PODs.\
 
 Now scale the ReplicaSet down to 2 PODs.\
 `kubectl scale rs nginx-replicaset --replicas=2`
+
+
+
+## What is a Kubernetes Service?
+The idea of a Service is to group a set of Pod endpoints into a single resource. You can configure various ways to access the grouping. By default, you get a stable cluster IP address that clients inside the cluster can use to contact Pods in the Service. A client sends a request to the stable IP address, and the request is routed to one of the Pods in the Service.
+
+A Service identifies its member Pods with a selector. For a Pod to be a member of the Service, the Pod must have all of the labels specified in the selector. A label is an arbitrary key/value pair that is attached to an objec
+
+
+## Why use a Kubernetes Service?
+In a Kubernetes cluster, each Pod has an internal IP address. But the Pods in a Deployment come and go, and their IP addresses change. So it doesn't make sense to use Pod IP addresses directly. With a Service, you get a stable IP address that lasts for the life of the Service, even as the IP addresses of the member Pods change.
+
+A Service also provides load balancing. Clients call a single, stable IP address, and their requests are balanced across the Pods that are members of the Service.
+
+
+## Types of Kubernetes Services
+There are five types of Services:
+
+ClusterIP (default): Internal clients send requests to a stable internal IP address.
+
+NodePort: Clients send requests to the IP address of a node on one or more nodePort values that are specified by the Service.
+
+LoadBalancer: Clients send requests to the IP address of a network load balancer.
+
+ExternalName: Internal clients use the DNS name of a Service as an alias for an external DNS name.
+
+Headless: You can use a headless service when you want a Pod grouping, but don't need a stable IP address.
+
+Here Example of Service:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+```
