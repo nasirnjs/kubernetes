@@ -11,11 +11,14 @@
   - [Steps 4: Apply Horizontal Pod Autoscaler.](#steps-4-apply-horizontal-pod-autoscaler)
   - [Increase load to the Application.](#increase-load-to-the-application)
   - [Monitor Events](#monitor-events)
+- [Vertical Pod Autoscaling (VPA)](#vertical-pod-autoscaling-vpa)
+  - [Kubernetes VPA resource configuration types](#kubernetes-vpa-resource-configuration-types)
+- [Vertical Pod Autoscaler (VPA) Configuration Steps](#vertical-pod-autoscaler-vpa-configuration-steps)
 
  ## What is kubernetes autoscaler
  Autoscaling in Kubernetes refers to the automatic adjustment of resources in response to changes in workload demand. Kubernetes provides several mechanisms for autoscaling: 
 - Including Horizontal Pod Autoscaling (HPA)
-- Cluster Autoscaler, and Vertical Pod Autoscaler (VPA)
+- Vertical Pod Autoscaler (VPA)
 - Cluster Autoscaler
 
 ## Autoscaling dimensions Kubernetes
@@ -27,7 +30,7 @@
   Pic: Horizontal Pod Autoscaling (HPA)
 </p>
 
-**Cluster Autoscaler, and Vertical Pod Autoscaler (VPA):** Vertical Pod Autoscaler (VPA) adjusts the resource requests and limits of individual containers within Pods based on historical resource usage. It optimizes resource allocation within Pods, ensuring that each container has adequate resources to operate efficiently without over-provisioning.
+**Vertical Pod Autoscaler (VPA):** Vertical Pod Autoscaler (VPA) adjusts the resource requests and limits of individual containers within Pods based on historical resource usage. It optimizes resource allocation within Pods, ensuring that each container has adequate resources to operate efficiently without over-provisioning.
 
 **Cluster Autoscaler:** Cluster Autoscaler, on the other hand, adjusts the number of nodes in a Kubernetes cluster based on resource utilization and pending Pods. It ensures that your cluster has enough capacity to run your workloads efficiently and can automatically scale up by provisioning new nodes or scale down by removing underutilized nodes.
 
@@ -161,3 +164,56 @@ Options:
 
 **Note:** The HPA controller continuously monitors the metrics and adjusts the number of replicas based on the defined criteria. In this case, since the CPU utilization has dropped to 0%, the HPA will wait for some time (usually around 5 minutes) to ensure that the decreased load is sustained before scaling down the replicas. This delay helps prevent frequent scaling events caused by temporary fluctuations in the workload.
 
+
+## Vertical Pod Autoscaling (VPA)
+The Vertical Pod Autoscaler (VPA) is a component in Kubernetes designed to automatically adjust the CPU and memory resource requests of pods to match their actual resource usage. Unlike the Horizontal Pod Autoscaler (HPA), which scales the number of pod replicas based on CPU or memory utilization, the VPA focuses on adjusting the resource requests of individual pods to optimize resource utilization within the cluster.
+
+Autoscaling is configured with a Custom Resource Definition object called [VerticalPodAutoscaler](https://github.com/kubernetes/autoscaler). It allows to specify which pods should be vertically autoscale as well as if/how the resource recommendations are applied. [Infra References](https://github.com/kubernetes/design-proposals-archive/blob/main/autoscaling/vertical-pod-autoscaler.md)
+
+
+<p align="center">
+  <img src="./ref-image/vpa.png" alt="VPA Architecture overview" title="VPA Architecture overview" height="250" width="850"/>
+  <br/>
+  Pic: VPA Architecture overview
+</p>
+
+
+
+### Kubernetes VPA resource configuration types
+With the Vertical Pod Autoscaler (VPA) in Kubernetes, you can manage two different types of resource configurations for each container within a pod. 
+
+1. Requests
+Requests define the minimum number of resources that containers need. For example, an application can use more than 256MB of memory, but Kubernetes will guarantee a minimum of 256MB to the container if its request is 256MB of memory.
+
+2. Limits
+Limits define the maximum number of resources that a given container can consume. Your application might require at least 256MB of memory, but you might want to ensure that it doesn’t consume more than 512MB of memory, i.e., to limit its memory consumption to 512MB.
+
+
+
+Apply the recommendations directly by updating/recreating the pods (updateMode = auto).
+Store the recommended values for reference (updateMode = off).
+Apply the recommended values to newly created pods only (updateMode = initial).
+
+
+## Vertical Pod Autoscaler (VPA) Configuration Steps
+Steps 1: Installation of Metrics Server
+
+
+Steps 2: Installation of Vertical Pod Autoscaler
+
+`git clone https://github.com/kubernetes/autoscaler.git`
+`cd autoscaler/vertical-pod-autoscaler`
+
+`./hack/vpa-up.sh`
+
+`kubectl top pods`
+
+`kubectl describe vpa hamster-vpa`
+
+`kubectl apply -f vpa-off-deployment.yaml`
+
+`kubectl apply -f vpa-auto-deployment.yaml`
+
+
+https://www.kubecost.com/kubernetes-autoscaling/kubernetes-vpa/
+https://foxutech.medium.com/vertical-pod-autoscaler-vpa-know-everything-about-it-6a2d7a383268
