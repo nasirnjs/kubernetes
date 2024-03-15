@@ -172,7 +172,7 @@ Autoscaling is configured with a Custom Resource Definition object called [Verti
 
 
 <p align="center">
-  <img src="./ref-image/kubernetes-vpa.png" alt="VPA Architecture overview" title="VPA Architecture overview" height="350" width="850"/>
+  <img src="./ref-image/kubernetes-VPA.png" alt="VPA Architecture overview" title="VPA Architecture overview" height="350" width="850"/>
   <br/>
   Pic: VPA Architecture overview
 </p>
