@@ -20,3 +20,16 @@ spec:
             cpu: "200m" # Set CPU resource limit
           requests:
             cpu: "100m" # Set CPU resource request
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
