@@ -22,7 +22,7 @@
 **Including Horizontal Pod Autoscaling (HPA):** Horizontal Pod Autoscaling (HPA) adjusts the number of replicas of a Kubernetes Deployment, ReplicaSet, or StatefulSet based on observed CPU or memory utilization. It ensures that your application has enough resources to handle increased traffic or usage and can automatically scale down when demand decreases, optimizing resource utilization and minimizing costs.
 
 <p align="center">
-  <img src="./ref-image/kubernetes-HPA.png" alt="Horizontal Pod Autoscaling (HPA)" title="Horizontal Pod Autoscaling (HPA)" height="200" width="850"/>
+  <img src="./ref-image/kubernetes-HPA.png" alt="Horizontal Pod Autoscaling (HPA)" title="Horizontal Pod Autoscaling (HPA)" height="300" width="850"/>
   <br/>
   Pic: Horizontal Pod Autoscaling (HPA)
 </p>
