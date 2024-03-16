@@ -12,8 +12,13 @@
   - [Increase load to the Application.](#increase-load-to-the-application)
   - [Monitor Events](#monitor-events)
 - [Vertical Pod Autoscaling (VPA)](#vertical-pod-autoscaling-vpa)
+  - [Components of VPA](#components-of-vpa)
   - [Kubernetes VPA resource configuration types](#kubernetes-vpa-resource-configuration-types)
 - [Vertical Pod Autoscaler (VPA) Configuration Steps](#vertical-pod-autoscaler-vpa-configuration-steps)
+  - [Steps 1: Installation of Metrics Server](#steps-1-installation-of-metrics-server)
+  - [Steps 2: Installation of Vertical Pod Autoscaler](#steps-2-installation-of-vertical-pod-autoscaler)
+  - [Steps 3: Insert a Vertical Pod Autoscaler resource](#steps-3-insert-a-vertical-pod-autoscaler-resource)
+- [Tear down VPA](#tear-down-vpa)
 
  ## What is kubernetes autoscaler
  Autoscaling in Kubernetes refers to the automatic adjustment of resources in response to changes in workload demand. Kubernetes provides several mechanisms for autoscaling: 
@@ -172,12 +177,19 @@ Autoscaling is configured with a Custom Resource Definition object called [Verti
 
 
 <p align="center">
-  <img src="./ref-image/kubernetes-VPA.png" alt="VPA Architecture overview" title="VPA Architecture overview" height="350" width="850"/>
+  <img src="./ref-image/kubernetes-VPA.png" alt="VPA Architecture overview" title="VPA Architecture overview" height="350" width="800"/>
   <br/>
   Pic: VPA Architecture overview
 </p>
 
+### Components of VPA
+The project consists of 3 components:
 
+1. Recommender - it monitors the current and past resource consumption and, based on it, provides recommended values for the containers' cpu and memory requests.
+
+2. Updater - it checks which of the managed pods have correct resources set and, if not, kills them so that they can be recreated by their controllers with the updated requests.
+
+3. Admission Plugin - it sets the correct resource requests on new pods (either just created or recreated by their controller due to Updater's activity).
 
 ### Kubernetes VPA resource configuration types
 With the Vertical Pod Autoscaler (VPA) in Kubernetes, you can manage two different types of resource configurations for each container within a pod. 
@@ -189,17 +201,17 @@ Requests define the minimum number of resources that containers need. For exampl
 Limits define the maximum number of resources that a given container can consume. Your application might require at least 256MB of memory, but you might want to ensure that it doesn’t consume more than 512MB of memory, i.e., to limit its memory consumption to 512MB.
 
 
-
 Apply the recommendations directly by updating/recreating the pods (updateMode = auto).
 Store the recommended values for reference (updateMode = off).
 Apply the recommended values to newly created pods only (updateMode = initial).
 
 
 ## Vertical Pod Autoscaler (VPA) Configuration Steps
-Steps 1: Installation of Metrics Server
+### Steps 1: Installation of Metrics Server
+If you don't have install metrics Server you could follow this [steps](https://github.com/nasirnjs/kubernetes/tree/main/3-k8s-auto-scaler#steps-2-install-the-metrics-server)
 
-
-Steps 2: Installation of Vertical Pod Autoscaler
+### Steps 2: Installation of Vertical Pod Autoscaler
+To install VPA, please download the source code of VPA from [Here](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#install-command),and run the following command inside the vertical-pod-autoscaler directory.
 
 `git clone https://github.com/kubernetes/autoscaler.git`
 `cd autoscaler/vertical-pod-autoscaler`
@@ -210,10 +222,34 @@ Steps 2: Installation of Vertical Pod Autoscaler
 
 `kubectl describe vpa hamster-vpa`
 
+### Steps 3: Insert a Vertical Pod Autoscaler resource
+
+After installation the system is ready to recommend and set resource requests for your pods. In order to use it, you need to insert a Vertical Pod Autoscaler resource for each controller that you want to have automatically computed resource requirements. This will be most commonly a Deployment. There are four modes in which VPAs operate:
+
+- "Auto": VPA assigns resource requests on pod creation as well as updates them on existing pods using the preferred update mechanism. Currently, this is equivalent to "Recreate" (see below). Once restart free ("in-place") update of pod requests is available, it may be used as the preferred update mechanism by the "Auto" mode.
+- "Recreate": VPA assigns resource requests on pod creation as well as updates them on existing pods by evicting them when the requested resources differ significantly from the new recommendation (respecting the Pod Disruption Budget, if defined). This mode should be used rarely, only if you need to ensure that the pods are restarted whenever the resource request changes. Otherwise, prefer the "Auto" mode which may take advantage of restart-free updates once they are available.
+- "Initial": VPA only assigns resource requests on pod creation and never changes them later.
+"Off": VPA does not automatically change the resource requirements of the pods. The recommendations are calculated and can be inspected in the VPA object.
+
 `kubectl apply -f vpa-off-deployment.yaml`
 
 `kubectl apply -f vpa-auto-deployment.yaml`
 
+`kubectl describe vpa`
 
-https://www.kubecost.com/kubernetes-autoscaling/kubernetes-vpa/
-https://foxutech.medium.com/vertical-pod-autoscaler-vpa-know-everything-about-it-6a2d7a383268
+`kubectl top pods`
+
+`kubectl describe vpa hamster-vpa`
+
+## Tear down VPA
+Note that if you stop running VPA in your cluster, the resource requests for the pods already modified by VPA will not change, but any new pods will get resources as defined in your controllers (i.e. deployment or replicaset) and not according to previous recommendations made by VPA.
+
+Go you VPA download directory.\
+`cd autoscaler/vertical-pod-autoscaler`
+
+Tear down VPA components.\
+`./hack/vpa-down.sh`
+
+Aditional References
+[Reference-1](https://www.kubecost.com/kubernetes-autoscaling/kubernetes-vpa)
+[Reference-2](https://foxutech.medium.com/vertical-pod-autoscaler-vpa-know-everything-about-it-6a2d7a383268)
