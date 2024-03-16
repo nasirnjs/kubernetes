@@ -9,8 +9,8 @@
   - [Steps 2: Install the Metrics Server.](#steps-2-install-the-metrics-server)
   - [Steps 3: Deploy a sample application](#steps-3-deploy-a-sample-application)
   - [Steps 4: Apply Horizontal Pod Autoscaler.](#steps-4-apply-horizontal-pod-autoscaler)
-  - [Increase load to the Application.](#increase-load-to-the-application)
-  - [Monitor Events](#monitor-events)
+  - [Steps 5: Increase load to the Application.](#steps-5-increase-load-to-the-application)
+  - [Steps 6: Monitor Events](#steps-6-monitor-events)
 - [Vertical Pod Autoscaling (VPA)](#vertical-pod-autoscaling-vpa)
   - [Components of VPA](#components-of-vpa)
   - [Kubernetes VPA resource configuration types](#kubernetes-vpa-resource-configuration-types)
@@ -142,7 +142,7 @@ You can configuration imperative way.\
 Verify the HPA deployment.\
 `kubectl get hpa -w`
 
-### Increase load to the Application.
+### Steps 5: Increase load to the Application.
 So far, we have set up our EKS cluster, installed the Metrics Server, deployed a sample application, and created an associated Kubernetes service for the application. We also deployed HPA, which will monitor and adjust our resources.
 
 `ab [options] [http[s]://]hostname[:port]/path`\
@@ -159,7 +159,7 @@ Options:
 - `-H headerline`: Additional header to send, e.g., `'Accept-Encoding: gzip'`.
 - `-v verbosity`: Set verbosity level, where 0 is the least verbose and 4 is the most verbose.
 
-### Monitor Events
+### Steps 6: Monitor Events
 `kubectl get hpa`
 
 `watch kubectl get pod`
