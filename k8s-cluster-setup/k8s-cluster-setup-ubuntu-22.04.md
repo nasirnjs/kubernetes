@@ -138,7 +138,7 @@ cat /etc/containerd/config.toml
 `sudo systemctl status containerd`
 
 ### 3.5 Install Kubernetes Management Tools (Master & Worker Node).
-Description: Install essential Kubernetes management tools - Kubeadm, Kubelet, and Kubectl.
+Description: Install using native package management, Install essential Kubernetes management tools - Kubeadm, Kubelet, and Kubectl.
 
 [Reference](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
 ```bash
@@ -146,8 +146,12 @@ sudo apt-get update
 sudo apt-get install -y ca-certificates curl
 sudo apt-get install -y apt-transport-https ca-certificates curl
 
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+
 ```
 ```bash
 sudo apt-get update
