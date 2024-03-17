@@ -26,5 +26,13 @@ To retrieve a list of Kubernetes contexts in your Kubectl configuration.\
 Now switch to a different context in your Kubernetes configuration.\
 `kubectl config use-context aes-cluster-1`
 
+**Steps 6:**
+Rename cluster Context
+
+`kubectl config get-contexts`
+
+`kubectl config rename-context do-sfo3-west west`
+
+`kubectl config get-contexts -o=name`
 
 [Reference](https://github.com/SMACAcademy/Kubernetes_on_Vultr_Cloud/blob/main/vultr/00-01-kubeconfig.md)
