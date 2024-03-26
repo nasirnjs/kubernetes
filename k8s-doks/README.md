@@ -1,4 +1,4 @@
-# Installing DigitalOcean doctl & Connect with K8 Cluster and Configure Ingress TLS/SSL Certificates
+# Installing DigitalOcean doctl & Connect with K8 Cluster
 
 ### Using a Package Manager
 
@@ -38,12 +38,9 @@ This will create the necessary directory structure and configuration file to sto
 Lists regions that support DigitalOcean Kubernetes clusters.\
 `doctl compute region list`
 
-Lists machine sizes that you can use in a DigitalOcean Kubernetes cluster.\
-`doctl kubernetes options sizes`
-
 
 [doks cmd](https://docs.digitalocean.com/reference/doctl/reference/kubernetes/cluster/)
 
-[doctl-command](https://docs.digitalocean.com/reference/doctl/reference/kubernetes/cluster/)
+[doctl comd](https://docs.digitalocean.com/reference/doctl/reference/kubernetes/cluster/)
 
 ---
