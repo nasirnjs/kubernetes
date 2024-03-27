@@ -1,0 +1,17 @@
+<h2>List Student</h2>
+
+<table style=" font-family: arial, sans-serif; border-collapse: collapse;">
+    <tr>
+        <th style="  border: 1px solid #dddddd; text-align: left; padding: 8px;">Name</th>
+        <th style="  border: 1px solid #dddddd; text-align: left; padding: 8px;">Roll</th>
+    </tr>
+    <tr *ngFor="let student of jsonData">
+        <td style="  border: 1px solid #dddddd; text-align: left; padding: 8px;">{{ student.name }}</td>
+        <td style="  border: 1px solid #dddddd; text-align: left; padding: 8px;">{{ student.roll }}</td>
+    </tr>
+</table>
+<!-- <ul>
+    <li *ngFor="let student of jsonData">Name: {{ student.name }} | Roll: {{ student.name }}</li>
+</ul> -->
+
+<button (click)="refreshData()" style="margin-top: 16px;">Refresh List</button>
