@@ -19,7 +19,7 @@ import studentdot.student.entity.Student;
 import studentdot.student.service.StudentService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/be/api")
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class StudentController {
