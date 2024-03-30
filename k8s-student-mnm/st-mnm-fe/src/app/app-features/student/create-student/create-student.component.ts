@@ -19,7 +19,7 @@ export class CreateStudentComponent implements OnInit {
   onSubmit() {
     const data = { name: this.sname, roll: this.roll };
     this.http
-      .post('http://localhost:8080/student', data)
+      .post('/student', data)
       .subscribe(
         res => {
           console.log(res);

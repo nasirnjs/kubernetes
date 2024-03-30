@@ -24,6 +24,6 @@ spec:
         path: /be/?(.*)
         backend:
           service:
-            name: eticker-be
+            name: st-mnm-be
             port:
               number: 80

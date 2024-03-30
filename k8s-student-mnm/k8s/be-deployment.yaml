@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: st-mnm-be
-        image: nasirnjs/stmnmfe:0.0.1
+        image: nasirnjs/stmnmbe:0.0.4
         ports:
         - containerPort: 80
 ---
