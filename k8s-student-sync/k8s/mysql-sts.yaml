@@ -44,7 +44,7 @@ spec:
       name: mysql-persistent-storage
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: nfs-client
+      storageClassName: do-block-storage
       resources:
         requests:
           storage: 2Gi
