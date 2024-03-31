@@ -15,7 +15,7 @@ export class ListStudentComponent implements OnInit {
   }
 
   refreshData(){
-    this.http.get<any[]>('/student/list').subscribe(data => {
+    this.http.get<any[]>('/be/student/list').subscribe(data => {
       this.jsonData = data;
       console.log(this.jsonData);
     });
