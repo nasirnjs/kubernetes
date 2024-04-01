@@ -5,7 +5,9 @@
 
 ### Steps 1: Deploy frontend application and Service
 
-### Steps 2: Deploy backend application and Service
+### Steps 2: Deploy Secret and MySQL STS
+
+### Steps 3: Deploy backend application and Service
 
 
 ## Configure Ingress TLS/SSL Certificates
@@ -35,10 +37,11 @@ helm install \
   --version v1.14.2 \
   --set installCRDs=true
 ```
-Check cert manager API is ready!. First, make sure that cmctl is installed from [HERE](https://cert-manager.io/docs/reference/cmctl/#installation) or you could install `cmctl` via following curl cmd.\
-`curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/latest/download/kubectl-cert_manager-linux-amd64.tar.gz tar xzf kubectl-cert-manager.tar.gz sudo mv kubectl-cert_manager /usr/local/bin`
+Check cert manager API is ready!.
+
+First, make sure that cmctl is installed from [HERE](https://cert-manager.io/docs/reference/cmctl/#installation)
 
 `kubectl cert-manager check api`
 
 ### Steps 4: Install TLS Certificate.
-Apply cert Issuer `issuer.yaml` and Create an Ingress resource `ingress-service.yaml` with exect reference of issuers.
+Apply cert Issuer `issuer.yaml` and Create an Ingress resource `ingress.yaml` with exect reference of issuers.
