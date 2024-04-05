@@ -6,7 +6,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: pod-reader
+  name: pod-list-reader
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
