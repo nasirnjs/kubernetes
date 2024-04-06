@@ -1,8 +1,21 @@
 <h2> Understanding Kubernetes Service Account & RBAC </h2>
 
 **Table of Contents**
+- [Users in Kubernetes](#users-in-kubernetes)
+- [Normal Users](#normal-users)
 - [Kubernetes Service Accounts](#kubernetes-service-accounts)
 - [Kubernetes RBAC](#kubernetes-rbac)
+
+## Users in Kubernetes 
+All Kubernetes clusters have two categories of users: service accounts managed by Kubernetes, and normal users
+
+[References](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+
+[Create a user](https://github.com/nasirnjs/kubernetes/blob/main/k8s-cheat-sheet/issue-certificate-for-user.md)
+
+## Normal Users
+These are human users who interact with the Kubernetes cluster using tools like `kubectl` or other client applications. Normal users authenticate themselves to the Kubernetes API server using various authentication methods such as client certificates, static token files, or OIDC. Normal users are typically responsible for managing and administering the cluster, as well as deploying and monitoring applications.
+
 
 ## Kubernetes Service Accounts
 
