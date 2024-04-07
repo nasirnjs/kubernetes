@@ -73,7 +73,8 @@ In Kubernetes, roles and role bindings, as well as cluster roles and cluster rol
 ```bash
 kubectl create role pod-reader --verb=get,list,watch --resource=pods --namespace=default
 kubectl create rolebinding pod-reader-binding --role=pod-reader --user=bob --namespace=default
-
+kubectl -n default get pod server --as bob
+kubectl -n default delete pod server --as bob
 ```
 
 **To create a ClusterRole and Cluster RoleBinding imperatively in Kubernetes**
@@ -82,4 +83,11 @@ kubectl create rolebinding pod-reader-binding --role=pod-reader --user=bob --nam
 kubectl create clusterrole pod-reader --verb=get,list,watch --resource=pods
 kubectl create clusterrolebinding bob-admin-binding --clusterrole=pod-reader --user=bob
 kubectl run nginx --image nginx --as bob
+```
+
+```bash
+kubectl create clusterrole dev-cluster-role --verb=get,list,watch,create --resource=pods
+kubectl create clusterrolebinding dev-admin-binding --clusterrole=dev-cluster-role --user=akib
+kubectl run server --image nginx -n default --as akib
+kubectl -n default delete pod server --as akib
 ```
