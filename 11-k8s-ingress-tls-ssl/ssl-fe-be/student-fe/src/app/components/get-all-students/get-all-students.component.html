@@ -1,0 +1,36 @@
+<div class="formbold-main-wrapper">
+    <!-- Author: FormBold Team -->
+    <!-- Learn More: https://formbold.com -->
+    <div class="formbold-form-wrapper">
+        <Table>
+            <div class="formbold-input-wrapp formbold-mb-3">
+                <h1 for="firstname" class="formbold-form-label" style="text-align: center; font-size: 35px;">All Student Information</h1>
+                <button class="formbold-btn" routerLink="/student" style="font-family: 'Times New Roman', Times, serif;">Add New Student</button>
+                <thead class="formbold-form-label">
+                    <tr>
+                        <th class="formbold-form-label">Name</th>
+                        <th class="formbold-form-label">Class</th>
+                        <th class="formbold-form-label">Roll</th>
+                        <th class="formbold-form-label">Father Name</th>
+                        <th class="formbold-form-label">Mother Name</th>
+                        <th class="formbold-form-label">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let student of students">
+                        <td class="formbold-form-label">{{student.name}}</td>
+                        <td class="formbold-form-label">{{student.className}}</td>
+                        <td class="formbold-form-label">{{student.roll}}</td>
+                        <td class="formbold-form-label">{{student.fatherName}}</td>
+                        <td class="formbold-form-label">{{student.motherName}}</td>
+                        <td class="formbold-form-label">
+                            <button class="formbold-btn-1" routerLink="/student/{{student.id}}" style="font-family: 'Times New Roman', Times, serif;">Update</button>
+                            <button class="formbold-btn-1" (click)="deleteStudent(student.id)" style="font-family: 'Times New Roman', Times, serif;">Delete</button>
+                    </tr>
+                </tbody>
+            </div>
+        </Table>
+
+    </div>
+  </div>
+  

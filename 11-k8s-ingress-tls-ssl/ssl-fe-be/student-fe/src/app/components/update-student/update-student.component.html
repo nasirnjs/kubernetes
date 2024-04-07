@@ -1,0 +1,79 @@
+<div class="formbold-main-wrapper">
+    <!-- Author: FormBold Team -->
+    <!-- Learn More: https://formbold.com -->
+    <div class="formbold-form-wrapper">
+        
+      <form [formGroup]="updateStudentForm">
+        <div class="formbold-input-wrapp formbold-mb-3">
+            <h1 for="firstname" class="formbold-form-label" style="text-align: center; font-size: 35px;">Update Information</h1>
+            <label for="firstname" class="formbold-form-label"> Name </label>
+  
+          <div>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Full Name"
+              class="formbold-form-input"
+              formControlName="name"
+              required
+            />
+          </div>
+        </div>
+  
+        <div class="formbold-mb-3">
+            <label for="className" class="formbold-form-label"> Class </label>
+            <input
+              type="text"
+              name="className"
+              id="className"
+              placeholder="ex:01"
+              class="formbold-form-input"
+              formControlName="className"
+              required
+            />
+        </div>
+
+        <div class="formbold-mb-3">
+          <label for="roll" class="formbold-form-label"> Roll </label>
+          <input
+            type="text"
+            name="roll"
+            id="roll"
+            placeholder="ex:25"
+            class="formbold-form-input"
+            formControlName="roll"
+            required
+          />
+        </div>
+
+        <div class="formbold-mb-3">
+          <label for="fatherName" class="formbold-form-label"> Father Name </label>
+          <input
+            type="text"
+            name="fatherName"
+            id="fatherName"
+            placeholder="Father Name"
+            class="formbold-form-input"
+            formControlName="fatherName"
+            required
+          />
+        </div>
+
+        <div class="formbold-mb-3">
+            <label for="motherName" class="formbold-form-label"> Mother Name </label>
+            <input
+              type="text"
+              name="motherName"
+              id="motherName"
+              placeholder="Mother Name"
+              class="formbold-form-input"
+              formControlName="motherName"
+              required
+            />
+        </div>
+        <button type="submit" class="formbold-btn" (click)="updateStudent()">Update</button>
+      </form>
+    </div>
+  </div>
+  

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stu-mnm-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stu-mnm-be  
+  template:
+    metadata:
+      labels:
+        app: stu-mnm-be
+    spec:
+      containers:
+      - name: stu-mnm-be
+        image: nasirnjs/stumnmbe:0.0.5
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stu-mnm-be
+spec:
+  selector:
+    app: stu-mnm-be
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
