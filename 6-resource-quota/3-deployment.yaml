@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: quota
+  labels:
+    app: nginx
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          requests:
+            cpu: "0.5" # Requesting 0.5 CPU cores
+          limits:
+            cpu: "1"   # Limiting to 1 CPU core
+            memory: "512Mi" # Limiting to 512MiB of memory
