@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: un-known
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unknown-pod
+  Namespace: un-known
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: frontend-container
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-pod
+  Namespace: erp
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: frontend-container
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod
+  Namespace: erp
+  labels:
+    app: backend
+spec:
+  containers:
+  - name: backend-container
+    image: nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-frontend
+  namespace: erp
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: erp
+    - podSelector:
+        matchLabels:
+          app: frontend
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-from-unknown
+  namespace: erp
+spec:
+  podSelector: {} # Selects all pods in the current namespace
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: un-known
+---
