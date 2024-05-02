@@ -87,3 +87,16 @@ affinity:
 - **Purpose**: Specifies that the label value is not contained in the supplied set of strings.
 - **Example Use Case**: You might use `NotIn` to avoid scheduling pods next to nodes labeled with certain values, such as avoiding scheduling pods next to nodes labeled `cache`.
 - **Behavior**: Checks for the absence of specific label values within the supplied set of strings. It does not specifically check for the absence of the label itself but rather for specific values.
+
+## Taints and Tolerations
+Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.
+
+Tolerations are applied to pods. Tolerations allow the scheduler to schedule pods with matching taints. Tolerations allow scheduling but don't guarantee scheduling: the scheduler also evaluates other parameters as part of its function.
+
+You add a taint to a node using kubectl tain.\
+`kubectl taint nodes node1 key1=value1:NoSchedule`
+
+To remove the taint added by the command above, you can run.\
+`kubectl taint nodes node1 key1=value1:NoSchedule-`
+
+[Reference](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
