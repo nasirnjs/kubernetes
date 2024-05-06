@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allw-from-vms
+  namespace: erp
+spec:
+  podSelector:
+    matchLabels:
+      role: backend # Applied backend POD
+  policyTypes:
+  - Ingress
+  ingress:
+  #  Traffic originates from either the "vms" namespace or from a pod with the label `app: frontend` it will be allowed
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: vms
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend

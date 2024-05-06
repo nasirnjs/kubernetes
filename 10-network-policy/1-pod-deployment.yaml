@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: erp-app
+  namespace: erp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-app
+  template:
+    metadata:
+      labels:
+        app: erp-app
+    spec:
+      containers:
+      - name: erp-container
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-app
+  namespace: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database-app
+  template:
+    metadata:
+      labels:
+        app: database-app
+    spec:
+      containers:
+      - name: database-container
+        image: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unknown-app
+  namespace: un-known
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unknown-app
+  template:
+    metadata:
+      labels:
+        app: unknown-app
+    spec:
+      containers:
+      - name: unknown-container
+        image: nginx
+        ports:
+        - containerPort: 8080
