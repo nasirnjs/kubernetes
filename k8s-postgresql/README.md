@@ -7,7 +7,7 @@ Create a namespace for PostgreSQL deployment.\
 `kubectl create namespace postgresql`
 
 Install PostgreSQL using Helm with custom values.\
-`helm install my-postgresql-release bitnami/postgresql --namespace postgresql -f values.yaml -f configmap.yaml -f secret.yaml`
+`helm install my-postgresql bitnami/postgresql --namespace postgresql -f 3-values.yaml -f 0-configmap.yaml -f 1-secret.yaml`
 
 UnInstall helm postgresql.\
 `helm uninstall my-postgresql`
