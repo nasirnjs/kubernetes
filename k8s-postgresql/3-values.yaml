@@ -1,0 +1,32 @@
+fullnameOverride: my-postgresql
+global:
+  postgresql:
+    auth:
+      username: "nasir"
+      database: "my-db"
+      existingSecret: "postgresql-secret"
+      secretKeys:
+        adminPasswordKey: "adminpass"
+        userPasswordKey: "password"
+        replicationPasswordKey: "rep-password"
+      
+      ##You could use this way
+      # postgresPassword: "Password4Me"
+      # username: "nasir"
+      # password: "password"
+      # database: "my-db"
+  storageClass: "nfs-client"
+
+primary:
+  # initdb:
+  #   args: "--locale=en_US.UTF-8"
+  #   scripts:
+  #     init-db.sql: | 
+  existingConfigmap: "postgresql-configmap"
+  persistence:
+    size: 1000Mi
+readReplicas:
+  persistence:
+    size: 1000Mi
+  replicaCount: 1
+architecture: replication

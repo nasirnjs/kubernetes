@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-configmap
+  namespace: postgresql
+
+data:
+  custom-config.sql: |-
+    listen_addresses = '*'
+    port = '5432'
+    max_connections = '2000'
+    wal_level = 'logical'
+    fsync = 'on'
+    max_wal_size = '400MB'
+    archive_mode = 'on'
+    archive_command = '/bin/true'
+    max_wal_senders = '16'
+    wal_keep_segments = '12'
+    max_replication_slots = '10'
+    logging_collector = 'on'
+    log_directory = '/opt/bitnami/postgresql/logs'
+    log_filename = 'postgresql.log'
+    log_connections = 'false'
+    log_disconnections = 'false'
+    log_hostname = 'true'
+    client_min_messages = 'error'
+    include_dir = 'conf.d'
+    pgaudit.log_catalog = 'off'
+    shared_preload_libraries = 'repmgr'
+    hot_standby = 'off'
+          
