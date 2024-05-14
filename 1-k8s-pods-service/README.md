@@ -1,5 +1,5 @@
 
-**Table of Contents**
+**Table of Contents**- [What is kubernetes api-resources](#what-is-kubernetes-api-resources)
 - [What is kubernetes api-resources](#what-is-kubernetes-api-resources)
 - [What is Pod](#what-is-pod)
 - [Key Points about Pods](#key-points-about-pods)
@@ -10,6 +10,7 @@
 - [What is a Kubernetes Service?](#what-is-a-kubernetes-service)
 - [Why use a Kubernetes Service?](#why-use-a-kubernetes-service)
 - [Types of Kubernetes Services](#types-of-kubernetes-services)
+- [Authenticate for private registry](#authenticate-for-private-registry)
 
 
 ## What is kubernetes api-resources
@@ -166,3 +167,23 @@ spec:
       targetPort: 80
   type: LoadBalancer
 ```
+
+## Authenticate for private registry
+
+Create a secret object with the credentials required to access the registry.
+```
+Name: private-reg-cred
+Username: dock_user
+Password: dock_password
+Server: myprivateregistry.com:5000
+Email: dock_user@myprivateregistry.com
+```
+```
+kubectl create secret docker-registry private-reg-cred \
+  --docker-server=myprivateregistry.com:5000 \
+  --docker-username=dock_user \
+  --docker-password=dock_password \
+  --docker-email=dock_user@myprivateregistry.com
+```
+
+[References](https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry)
