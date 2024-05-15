@@ -61,7 +61,7 @@ Metrics Server can be installed either directly from YAML manifest or via the of
 
 `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
 
-**If Metrics Server does not work perfectly follow this [References](https://github.com/nasirnjs/kubernetes/blob/main/k8s-metrics-server/install-metrics-server.md)**
+**If Metrics Server does not work perfectly follow this [References](https://github.com/nasirnjs/kubernetes/tree/main/7-k8s-metrics-server#steps-2-on-each-node-add-the-servertlsbootstrap-true)**
 
 First, get the name of the Metric Server pod.\
 `kubectl get pods -n kube-system | grep metrics-server`
