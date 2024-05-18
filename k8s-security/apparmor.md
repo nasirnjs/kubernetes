@@ -22,7 +22,7 @@ Profiles: AppArmor uses profiles to define the permissions and restrictions for 
 
 ### AppArmor Implementation
 
-**Steps 1: Understanding AppArmor Service and Profiles**
+**Steps 1: Understanding AppArmor Service and Profiles.**
 Check AppArmor is installed on your system.\
 `sudo systemctl status apparmor.service`
 
@@ -32,7 +32,7 @@ By default, AppArmor is installed on Debian and Ubuntu distributions and you can
 It’s necessary to install additional packages in order to use various AppArmor utilities.\
 `sudo apt install apparmor-utils`
 
-**Steps 2: Create AppArmor Profile**.\
+**Steps 2: Create AppArmor Profile.**\
 Create `deny-write` profile to worker nodes.
 ```bash
 sudo vi /etc/apparmor.d/deny-write
@@ -45,7 +45,7 @@ profile k8s-apparmor-deny-write flags=(attach_disconnected) {
   deny /** w,
 }
 ```
-**Steps 3: Load the profile on all our nodes default directory /etc/apparmor.**.\
+**Steps 3: Load the profile on all our nodes default directory /etc/apparmor.**\
 `sudo apparmor_parser -q /etc/apparmor.d/deny-write`
 
 To check a specific AppArmor profile, such as /etc/apparmor.d/deny-write, is loaded or not!.\
@@ -58,7 +58,7 @@ The profile can be reloaded manually or automatically on reboot if it still exis
 `sudo apparmor_parser -R /etc/apparmor.d/deny-write`
 
 
-**Steps 4: Apply AppAmrmor profile to pod or Deployment.**.\
+**Steps 4: Apply AppAmrmor profile to pod or Deployment.**\
 `vim hello-apparmor.yaml`
 ```bash
 apiVersion: v1
@@ -76,7 +76,7 @@ spec:
 Deploy the AppAmrmor pod using kubect.\
 `kubectl describe pod hello-apparmor`
 
-**Steps 5: Steps to Verify**
+**Steps 5: Steps to Verify.**\
 Access the Pod & Open a shell in the running container and Attempt a Write Operation, you will be deny.
 ```bash
 kubectl exec -it hello-apparmor -- sh
