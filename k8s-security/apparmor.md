@@ -38,7 +38,7 @@ Create `deny-write` profile to worker nodes.
 sudo vi /etc/apparmor.d/deny-write
 
 #include <tunables/global>
-profile k8s-apparmor-example-deny-write flags=(attach_disconnected) {
+profile k8s-apparmor-deny-write flags=(attach_disconnected) {
   #include <abstractions/base>
   file,
   # Deny all file writes.
@@ -46,22 +46,50 @@ profile k8s-apparmor-example-deny-write flags=(attach_disconnected) {
 }
 ```
 **Steps 3: Load the profile on all our nodes default directory /etc/apparmor.**.\
-`sudo apparmor_parser /etc/apparmor.d/deny-write`
+`sudo apparmor_parser -q /etc/apparmor.d/deny-write`
+
+To check a specific AppArmor profile, such as /etc/apparmor.d/deny-write, is loaded or not!.\
+`sudo aa-status | grep deny-write`
+
+Profile is disabled permanently and will not be reloaded after a reboot.\
+`sudo aa-disable /etc/apparmor.d/deny-write`
+
+The profile can be reloaded manually or automatically on reboot if it still exists in the /etc/apparmor.d/ directory.\
+`sudo apparmor_parser -R /etc/apparmor.d/deny-write`
+
 
 **Steps 4: Apply AppAmrmor profile to pod or Deployment.**.\
+`vim hello-apparmor.yaml`
 ```bash
 apiVersion: v1
 kind: Pod
 metadata:
   name: hello-apparmor
   annotations:
-    container.apparmor.security.beta.kubernetes.io/hello: localhost/k8s-apparmor-example-deny-write
+    container.apparmor.security.beta.kubernetes.io/hello: localhost/k8s-apparmor-deny-write
 spec:
   containers:
   - name: hello
     image: busybox
     command: [ "sh", "-c", "echo 'Hello AppArmor!' && sleep 1h" ]
 ```
+Deploy the AppAmrmor pod using kubect.\
+`kubectl describe pod hello-apparmor`
+
+**Steps 5: Steps to Verify**
+Access the Pod & Open a shell in the running container and Attempt a Write Operation, you will be deny.
+```bash
+kubectl exec -it hello-apparmor -- sh
+echo "Test write operation" > /tmp/testfile
+```
+*If the AppArmor profile is working correctly, the write operation should be denied. The command should fail with a "Permission denied" error or similar.*
+  
+Check for logs related to the deny-write profile, you can chain grep commands.\
+`sudo journalctl | grep apparmor | grep deny-write`
+
+*By disabling the AppArmor pod annotations and recreating the pod, you will be able to write inside the pod.*
+
+
+
 [References 1](https://jumpcloud.com/blog/how-to-configure-apparmor-for-security-debian-ubuntu#:~:text=The%20output%20tells%20you%20how,two%20modes%3A%20enforce%20or%20complain.)
 [References 2](https://gitlab.com/apparmor/apparmor/-/wikis/Documentation)
-
