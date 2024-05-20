@@ -1,12 +1,27 @@
 
 ## Trivy
+Trivy is a tool used to detect Common Vulnerabilities and Exposures (CVEs) in various environments, including container images, file systems, and Git repositories. It is designed to be a comprehensive and easy-to-use vulnerability scanner that helps identify known security issues in software components by leveraging vulnerability databases.
+
 Trivy is a popular open-source vulnerability scanner that is easy to use and integrates well with various CI/CD pipelines and container platforms. It can scan container images, file systems, and Git repositories for known vulnerabilities
 
-## Scan images for known vulnerabilities (Trivy)
+### Key Features of Trivy
+- Comprehensive Scanning:
+    Scans container images, file systems, and repositories for vulnerabilities.
+    Supports multiple operating systems and programming languages.
+    
+- Vulnerability Databases:
+    Uses multiple vulnerability databases such as NVD (National Vulnerability Database), GitHub Security Advisories, and other upstream vulnerability sources.
 
-Install [References](https://aquasecurity.github.io/trivy/v0.31.3/getting-started/installation/)
+- Easy Integration:
+    Integrates seamlessly with CI/CD pipelines.
+    Can be used with various platforms like Docker, Kubernetes, and others.
 
-Simply specify an image name.\
+- Detailed Reports:
+    Provides detailed reports on detected vulnerabilities, including severity, installed versions, and fixed versions.
+
+## Trivy Install [References](https://aquasecurity.github.io/trivy/v0.31.3/getting-started/installation/)
+
+## Simply specify an image name.
 `trivy image python:3.4-alpine`
 
 Can we scan tarball archives using trivy ?.\
