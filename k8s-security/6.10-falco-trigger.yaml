@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trigger-pod
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    command: ["sh", "-c", "while true; do cat /etc/passwd; sleep 600; done"]

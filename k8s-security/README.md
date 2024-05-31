@@ -51,20 +51,12 @@ Table of Contents
 
 
 
-## Kubesec 
-`wget https://github.com/controlplaneio/kubesec/releases/download/v2.13.0/kubesec_linux_amd64.tar.gz`
-
-`tar -xvf  kubesec_linux_amd64.tar.gz`
-
-`mv kubesec /usr/bin/`
-
-`kubesec scan k8s-deployment.yaml`
-
-[Refe](https://github.com/controlplaneio/kubesec?tab=readme-ov-file#download-kubesec)
-
-
-
-
 
 
 [MOC Exam](https://github.com/kodekloudhub/certified-kubernetes-security-specialist-cks-course/tree/main/docs)
+
+## Container sandboxing
+Container sandboxing enhances security by isolating containers using various techniques and tools such as namespaces, cgroups, seccomp, AppArmor, SELinux, and specialized runtimes like Kata Containers and gVisor. Implementing these mechanisms helps protect the host system and other containers, ensuring a more secure and stable containerized environment.
+
+
+
