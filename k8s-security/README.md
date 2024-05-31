@@ -46,17 +46,4 @@ Table of Contents
 
 
 
-- [Kubesec](#kubesec)
-- [Scan images for known vulnerabilities (Trivy)](#scan-images-for-known-vulnerabilities-trivy)
-
-
-
-
-
-[MOC Exam](https://github.com/kodekloudhub/certified-kubernetes-security-specialist-cks-course/tree/main/docs)
-
-## Container sandboxing
-Container sandboxing enhances security by isolating containers using various techniques and tools such as namespaces, cgroups, seccomp, AppArmor, SELinux, and specialized runtimes like Kata Containers and gVisor. Implementing these mechanisms helps protect the host system and other containers, ensuring a more secure and stable containerized environment.
-
-
 
