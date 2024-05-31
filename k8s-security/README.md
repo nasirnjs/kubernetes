@@ -1,7 +1,4 @@
 
-<h2> Certified Kubernetes Security Specialist (CKS) Exam study guide </h2>
-Table of Contents
-
 ## Certified Kubernetes Security Specialist (CKS) Exam Syllabus
 
 ### 1. Cluster Setup (10%)
