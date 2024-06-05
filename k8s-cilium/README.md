@@ -105,5 +105,5 @@ helm install cilium cilium/cilium \
     --set ipam.operator.clusterPoolIPv4PodCIDRList=192.168.170.0/16
 ```
 
-## Install Cilium CLI [References](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/)
+## Install Cilium CLI [References-1](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-2](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-3](https://docs.cilium.io/en/latest/gettingstarted/hubble/)
 

@@ -6,5 +6,5 @@ helm install cilium cilium/cilium \
     --set hubble.relay.enabled=true \
     --set envoy.prometheus.enabled=true \
     --set k8sServiceHost=localhost \
-    --set k8sServicePort=7445 \
+    --set k8sServicePort=6443 \
     --set ipam.operator.clusterPoolIPv4PodCIDRList=192.168.170.0/16
