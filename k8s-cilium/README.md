@@ -9,19 +9,19 @@ Cilium Kubernetes CNI Provider Deep Dive
 </p>
 
 What is Cilium?
-Iptables performance issues
+
 eBPF overview
 How Cilium leverages eBPF for load balancing
 Cilium installation step by step
 
+*Kube-proxy: This is a network proxy that runs on each node in the cluster. It is responsible for maintaining network rules on nodes. These network rules allow network communication to your Pods from network sessions inside or outside of your cluster. kube-proxy uses iptables or IPVS (IP Virtual Server) to manage networking rules and ensure efficient traffic routing within the cluster.*
 
-sudo iptables -n-t nat -L KUBE-SERVICES
+**NAT Tables How IP Tables Works in Kubernetes **
 
-sudo iptables -n-t nat -L KUBE-SVC-16CTHWSTIGL5RHWT
+`sudo iptables -t nat -n -L KUBE-SERVICES`
 
-sudo iptables -n-t nat -L KUBE-SEP-DBUZDH4A34C65KQT
+`sudo iptables -t nat -n -L KUBE-SVC-I24EZXP75AX5E7TU`
 
-sudo iptables -n -t nat -L KUBE-SEP-PTQOICECNOXPELPH
 
 ## iptables Kube-Proxy Mode Performance Issues for Large Kubernetes Installations
 
@@ -92,6 +92,18 @@ The Hubble server: runs on each node and retrieves the eBPF-based visibility fro
 Relay (hubble-relay) is a standalone component which is aware of all running Hubble servers and offers cluster-wide visibility by connecting to their respective gRPC APIs and providing an API that represents all servers in the cluster.
 
 
-`helm repo add cilium https://helm.cilium.io/`
+```yaml
+helm install cilium cilium/cilium \
+    --namespace kube-system \
+    --set ipam.mode=kubernetes \
+    --set kubeProxyReplacement=true \
+    --set hubble.ui.enabled=true \
+    --set hubble.relay.enabled=true \
+    --set envoy.prometheus.enabled=true \
+    --set k8sServiceHost=localhost \
+    --set k8sServicePort=7445 \
+    --set ipam.operator.clusterPoolIPv4PodCIDRList=192.168.170.0/16
+```
 
+## Install Cilium CLI [References](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/)
 
