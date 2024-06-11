@@ -1,14 +1,28 @@
 
 Cilium Kubernetes CNI Provider Deep Dive
 
+## What is Cilium
+Crucial allow networking and security for containerized applications in cloud-native environments, helping organizations build and operate resilient and secure infrastructure for modern application workloads.
+
+Cilium is not just a networking and security solution but also functions as a Container Network Interface (CNI) plugin. In the realm of Kubernetes and container orchestration, CNI plugins are essential components that handle the networking aspects of containerized workloads. By serving as a CNI plugin, Cilium seamlessly integrates into Kubernetes environments, providing networking and security functionalities while adhering to the CNI specification.
+
+## Why Cilium is crucial in cloud-native environments!
+
+**Efficient Networking:** Utilizing eBPF, Cilium offers fast and efficient networking for containerized applications, including service discovery, load balancing, and network policies, ensuring secure and efficient communication.
+
+**Security:** Cilium enhances container security with fine-grained network policies based on application identity, reducing the attack surface and improving overall security posture.
+
+**Visibility and Observability:** Cilium provides detailed visibility into network traffic and application communication, enabling real-time monitoring and troubleshooting of network issues.
+
+**Scalability:** Designed for large-scale deployments, Cilium ensures efficient performance even as containerized environments scale to thousands of containers.
+
+**Integration with Kubernetes:** Tightly integrated with Kubernetes, Cilium simplifies networking and security for Kubernetes clusters, facilitating seamless deployment and management.
 
 <p align="center">
   <img src="./image/cilium-ebpf.png" alt="container ID on worker node" title="container ID on worker node" height="400" width="650"/>
   <br/>
   Pic: container ID on worker node
 </p>
-
-What is Cilium?
 
 eBPF overview
 How Cilium leverages eBPF for load balancing
@@ -81,29 +95,67 @@ Routing Traffic: These rules ensure that any traffic sent to the Service’s Clu
 
 
 
-Agent: Runs on each node in the cluster and listens for events from orchestration systems such as Kubernetes to learn when containers or workloads are started and stopped. It also manages the eBPF programs which the Linux kernel uses to control all network access in / out of those containers.
+**Agent:** Runs on each node in the cluster and listens for events from orchestration systems such as Kubernetes to learn when containers or workloads are started and stopped. It also manages the eBPF programs which the Linux kernel uses to control all network access in / out of those containers.
 
-The Cilium CLI is a command-line tool that is installed along with the Cilium agent. It interacts with the REST API of the Cilium agent running on the same node. The CLI allows inspecting the state and status of the local agent. It also provides tooling to directly access the eBPF maps to validate their state.
+**Cilium:** The Cilium CLI is a command-line tool that is installed along with the Cilium agent. It interacts with the REST API of the Cilium agent running on the same node. The CLI allows inspecting the state and status of the local agent. It also provides tooling to directly access the eBPF maps to validate their state.
 
-The Cilium Operator is responsible for managing duties in the cluster which should logically be handled once for the entire cluster, rather than once for each node in the cluster.
+**Cilium Operator:** The Cilium Operator is responsible for managing duties in the cluster which should logically be handled once for the entire cluster, rather than once for each node in the cluster.
 
-The Hubble server: runs on each node and retrieves the eBPF-based visibility from Cilium. It is embedded into the Cilium agent in order to achieve high performance and low- overhead. It offers a gRPC service to retrieve flows and Prometheus metrics.
+**Hubble server:** runs on each node and retrieves the eBPF-based visibility from Cilium. It is embedded into the Cilium agent in order to achieve high performance and low- overhead. It offers a gRPC service to retrieve flows and Prometheus metrics.
 
-Relay (hubble-relay) is a standalone component which is aware of all running Hubble servers and offers cluster-wide visibility by connecting to their respective gRPC APIs and providing an API that represents all servers in the cluster.
+**Relay:** Hhubble-relay is a standalone component which is aware of all running Hubble servers and offers cluster-wide visibility by connecting to their respective gRPC APIs and providing an API that represents all servers in the cluster.
 
+### First Install Cilium CLI
+
+```
+CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+CLI_ARCH=amd64
+if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+```
+[References](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/)
+
+
+### Install Cilium via Helam
 
 ```yaml
-helm install cilium cilium/cilium \
-    --namespace kube-system \
-    --set ipam.mode=kubernetes \
-    --set kubeProxyReplacement=true \
-    --set hubble.ui.enabled=true \
-    --set hubble.relay.enabled=true \
-    --set envoy.prometheus.enabled=true \
-    --set k8sServiceHost=localhost \
-    --set k8sServicePort=7445 \
-    --set ipam.operator.clusterPoolIPv4PodCIDRList=192.168.170.0/16
+helm repo add cilium https://helm.cilium.io/
 ```
+
+```
+helm install cilium cilium/cilium --version 1.15.5 \
+  --namespace kube-system
+  --reuse-values \
+  --set hubble.relay.enabled=true \
+  --set hubble.ui.enabled=true
+```
+
+### Install the Hubble Client
+
+```yaml
+HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
+HUBBLE_ARCH=amd64
+if [ "$(uname -m)" = "aarch64" ]; then HUBBLE_ARCH=arm64; fi
+curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
+sha256sum --check hubble-linux-${HUBBLE_ARCH}.tar.gz.sha256sum
+sudo tar xzvfC hubble-linux-${HUBBLE_ARCH}.tar.gz /usr/local/bin
+rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
+```
+[Helm References](https://docs.cilium.io/en/stable/installation/k8s-install-helm/)
+
+### Install the Hubble Client
+HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
+HUBBLE_ARCH=amd64
+if [ "$(uname -m)" = "aarch64" ]; then HUBBLE_ARCH=arm64; fi
+curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
+sha256sum --check hubble-linux-${HUBBLE_ARCH}.tar.gz.sha256sum
+sudo tar xzvfC hubble-linux-${HUBBLE_ARCH}.tar.gz /usr/local/bin
+rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
+
 
 ## Install Cilium CLI [References-1](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-2](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-3](https://docs.cilium.io/en/latest/gettingstarted/hubble/)
 
+https://www.youtube.com/watch?v=YPoXmHyGpZE
