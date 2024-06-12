@@ -91,9 +91,9 @@ spec:
 
 ## Steps 4: Expose server via LoadBalancer
 
-`kubectl run nginx-deployment --image=nginx --port=80`
+`kubectl create deployment nginx-dep --image nginx --port 80`
 
-`kubectl expose deployment nginx-deployment --type=LoadBalancer --name=nginx-service`
+`kubectl expose deployment nginx-dep --type LoadBalancer --name nginx-svc`
 
 `kubectl get svc`
 
