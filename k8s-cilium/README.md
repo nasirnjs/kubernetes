@@ -126,8 +126,8 @@ helm repo add cilium https://helm.cilium.io/
 ```
 
 ```
-helm install cilium cilium/cilium --version 1.15.5 \
-  --namespace kube-system
+helm upgrade cilium cilium/cilium --version 1.15.5 \
+  --namespace kube-system \
   --reuse-values \
   --set hubble.relay.enabled=true \
   --set hubble.ui.enabled=true
@@ -156,6 +156,12 @@ sudo tar xzvfC hubble-linux-${HUBBLE_ARCH}.tar.gz /usr/local/bin
 rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 
-## Install Cilium CLI [References-1](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-2](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) [References-3](https://docs.cilium.io/en/latest/gettingstarted/hubble/)
+## Install Cilium CLI 
+[References-1](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) 
+
+[References-2](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/) 
+
+[References-3](https://docs.cilium.io/en/latest/gettingstarted/hubble/)
+
 
 https://www.youtube.com/watch?v=YPoXmHyGpZE
