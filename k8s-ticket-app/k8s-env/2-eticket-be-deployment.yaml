@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eticket-be-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eticker-be  
+  template:
+    metadata:
+      labels:
+        app: eticker-be
+    spec:
+      containers:
+      - name: ieticker-be
+        image: nasirnjs/eticker-be:0.0.20
+        ports:
+        - containerPort: 7001
+        env:
+        - name: MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-root-credentials
+              key: username
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-root-credentials
+              key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eticker-be
+spec:
+  selector:
+    app: eticker-be
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 7001
