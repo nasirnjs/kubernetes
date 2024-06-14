@@ -1,0 +1,21 @@
+#upstash for redis
+#cloudinary for content uploading
+PORT=7001
+ORIGIN=["http://localhost:3000"]
+NODE_ENV=development
+#DB_URL=mongodb+srv://eticket:eticket@eticket.zcbmlc0.mongodb.net/eticket?retryWrites=true&w=majority
+#DB_URL=mongodb://eticket:eticket@mongo:27017/eticket?retryWrites=true&w=majority
+#DB_URL=mongodb://eticket:eticket@mongodb:27017/eticket?retryWrites=true&w=majority
+## Its working with plaintext user name and password
+##DB_URL=mongodb://root:root@mongodb-sts-0.eticket-mongodb.default.svc.cluster.local:27017/eticket?retryWrites=true&w=majority&authSource=admin
+DB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb-sts-0.eticket-mongodb.default.svc.cluster.local:27017/eticket?retryWrites=true&w=majority&authSource=admin
+ACTIVATION_SECRET="543288737728837492726332"
+ACCESS_TOKEN=zIErateLeHILi$$$maNtaCKELant!@%EOunCETeNUmisMarcABySTrAc
+ACCESS_TOKEN_EXPIRE=5
+REFRESH_TOKEN=pAWeLeA@$$$nDefonVatemInGUenDEns@@OuTHerSide$$PrO**MpTiveRIc
+REFRESH_TOKEN_EXPIRE=3
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=465
+SMTP_SERVICE="gmail"
+SMTP_MAIL="backend.learning95@gmail.com"
+SMTP_PASSWORD="jrbf dqqy oxpj uueo"
