@@ -5,7 +5,8 @@ ORIGIN=["http://localhost:3000"]
 NODE_ENV=development
 #DB_URL=mongodb+srv://eticket:eticket@eticket.zcbmlc0.mongodb.net/eticket?retryWrites=true&w=majority
 #DB_URL=mongodb://eticket:eticket@mongo:27017/eticket?retryWrites=true&w=majority
-DB_URL=mongodb://eticket:eticket@mongodb-sts-0.eticker-mongodb.default.svc.cluster.local:27017/eticket?retryWrites=true&w=majority
+#DB_URL=mongodb://eticket:eticket@mongodb:27017/eticket?retryWrites=true&w=majority
+DB_URL=mongodb://root:root@mongodb-sts-0.eticket-mongodb.default.svc.cluster.local:27017/eticket?retryWrites=true&w=majority&authSource=admin
 ACTIVATION_SECRET="543288737728837492726332"
 ACCESS_TOKEN=zIErateLeHILi$$$maNtaCKELant!@%EOunCETeNUmisMarcABySTrAc
 ACCESS_TOKEN_EXPIRE=5
