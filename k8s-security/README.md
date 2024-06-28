@@ -44,3 +44,4 @@
 
 
 
+https://github.com/kodekloudhub/certified-kubernetes-security-specialist-cks-course/blob/main/docs/08-Mock-Exams/02-Mock-Exam-1.md
