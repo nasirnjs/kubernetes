@@ -16,8 +16,8 @@ Keep the original timestamp format of the tool intact.
 Ensure that the events file is stored on a working node in the cluster.
 ---
 
-`sysdig -m 30 -p '%evt.time,%user.uid,%proc.name' container.id=    >> /opt/KSR00101/incidents/summary`
+`sysdig -M 30 -p '%evt.time,%user.uid,%proc.name' container.id=4648d67aabafe79310e2d25a8c    >> /opt/KSR00101/incidents/summary`
 
-`sysdig -m 30 -p '%evt.time,%user.name,%proc.name' container.id=    >> /opt/KSR00101/incidents/summary`
+`sysdig -M 30 -p '%evt.time,%user.name,%proc.name' container.id=    >> /opt/KSR00101/incidents/summary`
 
 ---
