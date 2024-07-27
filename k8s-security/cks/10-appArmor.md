@@ -27,3 +27,29 @@ spec:
   - image: nginx
     name: web-server
 ```
+---
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apparmor-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apparmor-example
+  template:
+    metadata:
+      labels:
+        app: apparmor-example
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/my-container: localhost/example-apparmor-profile
+    spec:
+      containers:
+      - name: my-container
+        image: nginx
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+```
