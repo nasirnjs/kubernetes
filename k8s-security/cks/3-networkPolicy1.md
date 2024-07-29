@@ -5,7 +5,7 @@ Allow only the following Pods to connect to Pod products-service:
 - Pods in any namespace with the label environment: testing
 ---
 
-`kubectl get pod products-service --show-labels`
+`kubectl get pod products-service --show-labels -n dev-team`
 
 `vim network-policy1.yaml`
 
