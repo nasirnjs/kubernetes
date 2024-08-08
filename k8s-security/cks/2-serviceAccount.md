@@ -32,4 +32,3 @@ spec:
   - image: nginx
     name: web-server
 ```
-
