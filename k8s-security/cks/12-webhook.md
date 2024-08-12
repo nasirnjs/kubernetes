@@ -26,7 +26,7 @@ Edit kubeapi server, enable admission pluging and admission controler configurat
 `sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml`
 
 ```yaml
---enable-admission-plugins=ImagePolicyWebhook
+--enable-admission-plugins=NodeRestriction,ImagePolicyWebhook
 --admission-control-config-file=/etc/kubernetes/epconfig/admission_configuration.json
 ```
 
