@@ -26,3 +26,5 @@ Ensure that the events file is stored on a working node in the cluster.
 `journalctl -fu falco | grep shell`
 
 `grep -A 10 -B 10 'A shell was spawned in a container' /etc/falco/falco_rules.yaml`
+
+`grep -A 10 -B 10 'Drift Detected' /etc/falco/falco_rules.yaml`
