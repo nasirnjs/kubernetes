@@ -4,12 +4,6 @@ Enable audit logging in the cluster. To do this, enable the logging backend and 
 - Log files are retained for10 days
 - Up to 2 old audit log files are retained
 
-/etc/kubernetes/logpolicy/sample-policy.yaml provides the basic policy. It specifies only what not to log
-
-Edit and extend the base policy to log:
-- Changes to persistentvolume sat the RequestResponse level
-- Request bodies for configmaps changes in namespace  front-apps
-- Changes to ConfigMap and Secret in all namespaces at the Metadata level.
 - In addition, add a catch-all rule to log all other requests at the Metadatalevel.
 ---
 

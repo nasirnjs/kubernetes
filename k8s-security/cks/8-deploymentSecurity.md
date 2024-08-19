@@ -1,8 +1,3 @@
-Modify Deployment secdein the sec-ns namespace as follows:
-
-- Start the container with a user ID of 30000 (set user ID to 30000).
-- Do not allow processes to gain privileges beyond those of their parents (disable allowPrivilegeEscalation).
-- Load the container's root filesystem as read-only (read-only permissions to the root file)
 
 
 ```yaml
