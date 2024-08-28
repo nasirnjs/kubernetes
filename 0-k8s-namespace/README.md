@@ -29,6 +29,16 @@ metadata:
   name: development
 ```
 
+To list all Kubernetes API resources.\
+`kubectl api-resources`
+
+`kubectl api-resources -o wide`
+
+`kubectl api-resources --namespaced=true`
+
+`kubectl api-resources --namespaced=false`
+
+
 ## Working with Namespaces
 
 How many Namespaces exist on the system?.\
