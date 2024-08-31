@@ -153,7 +153,7 @@ ExternalName: Internal clients use the DNS name of a Service as an alias for an 
 Headless: You can use a headless service when you want a Pod grouping, but don't need a stable IP address.
 
 Here Example of Service:
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
