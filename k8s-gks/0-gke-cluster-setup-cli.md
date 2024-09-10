@@ -28,7 +28,9 @@ Before you can create resources in Google Cloud, you need to authenticate with y
 If you haven't already set a default project and region for the gcloud CLI. First you have to checkout list of zone and machine types vai `gcloud compute regions list` and `gcloud compute machine-types list --filter="asia-east1"` you can do so by running 
 ```
 gcloud config set project PROJECT_ID
+gcloud compute regions list
 gcloud config set compute/region REGION
+gcloud services enable container.googleapis.com
 ```
 
 ## 6. Create GKE Cluster
@@ -66,7 +68,8 @@ sudo apt-get update && sudo apt-get --only-upgrade install kubectl google-cloud-
 ```
 
 This will force the config for this cluster to be updated to the Client-go Credential Plugin configuration.\
-`gcloud container clusters get-credentials aes-cluster --zone=asia-east1-a`
+``
+`gcloud container clusters get-credentials aes-gks-cluster1 --zone=asia-east1 --project=aes-test-gke`
 
 Get list of cluster POD\
 `kubectl get pod -A`
@@ -75,6 +78,8 @@ Get API Call.\
 `gcloud container clusters list --log-http >& gke-log.txt`
 
 To delete the GKE cluster named aes-cluster in the asia-east1-a region.\
+`gcloud container clusters list --zone=asia-east1`
+
 `gcloud container clusters delete aes-cluster --region=asia-east1-a`
 
 
