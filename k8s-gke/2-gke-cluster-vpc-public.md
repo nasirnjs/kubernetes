@@ -39,7 +39,7 @@
 4. A Private GKE cluster is an excellent choice for organizations that want to deploy and manage containerized applications in a secure and isolated environment.
 
 
-## This would create a regional cluster spanning across the zones in the asia-east1 region
+## This would create a regional GKE Public cluster spanning across the zones in the asia-east1 region
 
 ### Create VPC Network
 ```
