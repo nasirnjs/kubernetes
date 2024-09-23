@@ -60,6 +60,10 @@ gcloud compute networks subnets create nat-subnet \
 ```
 3. Create the GKE Subnet.\
 You also already have the command for creating the primary GKE subnet, where the cluster nodes will reside.
+
+Confirm the details of the existing subnets in your project.\
+`gcloud compute networks subnets list --regions asia-east1 --project aes-test-gke`
+
 ```
 gcloud compute networks subnets create gke-c1 \
     --project aes-test-gke \
@@ -67,6 +71,8 @@ gcloud compute networks subnets create gke-c1 \
     --range 172.16.4.0/22 \
     --region asia-east1
 ```
+
+
 4. Create the Firewall Rule for Control Plane.\
 ```
 gcloud compute firewall-rules create allow-control-plane \
@@ -83,6 +89,10 @@ gcloud compute routers create nat-router \
 ```
 6. Configure Cloud NAT.\
 Configure Cloud NAT to allow the private GKE nodes to communicate with the internet.
+
+To list all NAT configurations in your project, you can use the following command.\
+`gcloud compute routers nats list --router=nat-router --region=asia-east1 --project=aes-test-gke`
+
 ```
 gcloud compute routers nats create nat-config \
     --router=nat-router \
@@ -96,7 +106,6 @@ Here, the GKE nodes will be private (i.e., without public IPs), and they will re
 gcloud container clusters create aes-cluster \
     --zone asia-east1-a \
     --enable-master-authorized-networks \
-    --master-authorized-networks 115.128.82.114/32 \
     --machine-type c2d-highcpu-2 \
     --num-nodes 1 \
     --max-nodes 4 \
@@ -120,6 +129,73 @@ Private nodes (no public IPs).\
 Cloud NAT is configured to allow the nodes to access the internet.\
 The control plane is protected by a firewall rule that only allows access from a specific IP (your work station).
 
+---
+
+## Step 1: Create a Bastion Host VM
+
+### Reserve a Static External IP within Google Cloud: You need to reserve a static external IP address in the same region (asia-east1) for your bastion host.
+```bash
+gcloud compute addresses create bastion-ip \
+    --region asia-east1 \
+    --project aes-test-gke
+```
+###
+List the Static External IP: Retrieve the static external IP address that was just created.
+```bash
+gcloud compute addresses list --region asia-east1 --project aes-test-gke
+```
+
+```bash
+gcloud compute instances create bastion-host \
+    --zone asia-east1-a \
+    --machine-type e2-medium \
+    --subnet gke-c1 \
+    --network-tier PREMIUM \
+    --tags bastion \
+    --metadata=startup-script='#!/bin/bash
+    sudo apt-get update && sudo apt-get install -y kubectl' \
+    --image-family ubuntu-2204-lts \
+    --image-project ubuntu-os-cloud \
+    --boot-disk-size 10GB \
+    --boot-disk-type pd-balanced \
+    --boot-disk-device-name bastion-host \
+    --address 35.189.176.82
+
+```
+
+## Step 2: Configure Firewall Rules
+
+```bash
+gcloud compute firewall-rules create allow-ssh-from-office \
+    --network gke-1-net \
+    --allow tcp:22 \
+    --source-ranges 115.127.82.114/32 \
+    --target-tags bastion
+```
+
+Allow Internal Traffic Between Bastion and GKE
+
+```
+gcloud compute firewall-rules create allow-bastion-internal \
+    --network gke-1-net \
+    --allow tcp,udp,icmp \
+    --source-tags bastion \
+    --target-tags gke-c1
+```
+
+Step 3: SSH into the Bastion Host
+Use the following command to SSH into your newly created bastion host.\
+`gcloud compute ssh bastion-host --zone asia-east1-a`
+
+
+Step 4: Configure kubectl on the Bastion Host
+```
+gcloud container clusters get-credentials aes-cluster \
+    --zone asia-east1-a \
+    --project aes-test-gke
+```
+Verify access to the cluster.\
+`kubectl get nodes`
 
 
 It shows the names, locations (zone or region), and status of your clusters.\
@@ -130,3 +206,7 @@ This command retrieves the authentication credentials (kubeconfig) for the aes-c
 
 This command deletes the aes-cluster in the asia-east1-a zone. It will prompt for confirmation before deletion and permanently removes the cluster, along with all associated resources, (except any persistent disks or external load balancers unless manually removed).\
 `gcloud container clusters delete aes-cluster --zone=asia-east1-a --project=aes-test-gke`
+
+
+
+https://codelabs.developers.google.com/cloudnet-psc-ilb-gke#8
