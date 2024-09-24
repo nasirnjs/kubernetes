@@ -72,7 +72,6 @@ gcloud compute networks subnets create gke-c1 \
     --region asia-east1
 ```
 
-
 4. Create the Firewall Rule for Control Plane.\
 ```
 gcloud compute firewall-rules create allow-control-plane \
@@ -141,9 +140,7 @@ gcloud compute addresses create bastion-ip \
 ```
 ###
 List the Static External IP: Retrieve the static external IP address that was just created.
-```bash
-gcloud compute addresses list --region asia-east1 --project aes-test-gke
-```
+`gcloud compute addresses list --regions asia-east1 --project aes-test-gke`
 
 ```bash
 gcloud compute instances create bastion-host \
@@ -189,7 +186,7 @@ Use the following command to SSH into your newly created bastion host.\
 
 
 Step 4: Configure kubectl on the Bastion Host
-```
+```bash
 gcloud container clusters get-credentials aes-cluster \
     --zone asia-east1-a \
     --project aes-test-gke
@@ -206,6 +203,30 @@ This command retrieves the authentication credentials (kubeconfig) for the aes-c
 
 This command deletes the aes-cluster in the asia-east1-a zone. It will prompt for confirmation before deletion and permanently removes the cluster, along with all associated resources, (except any persistent disks or external load balancers unless manually removed).\
 `gcloud container clusters delete aes-cluster --zone=asia-east1-a --project=aes-test-gke`
+
+---
+# Delete the Kubernetes cluster
+gcloud container clusters delete aes-cluster --zone asia-east1-a --project aes-test-gke --quiet
+
+# Delete the bastion host instance
+gcloud compute instances delete bastion-host --zone asia-east1-a --project aes-test-gke --quiet
+
+# Delete the NAT router
+gcloud compute routers delete nat-router --region asia-east1 --project aes-test-gke --quiet
+
+# Delete the NAT subnet
+gcloud compute networks subnets delete nat-subnet --region asia-east1 --project aes-test-gke --quiet
+
+# Delete the GKE subnet
+gcloud compute networks subnets delete gke-c1 --region asia-east1 --project aes-test-gke --quiet
+
+# Delete the custom network
+gcloud compute networks delete gke-1-net --project aes-test-gke --quiet
+
+# Delete the service account
+gcloud iam service-accounts delete aesgke@aes-test-gke.iam.gserviceaccount.com --quiet
+
+
 
 
 
