@@ -248,7 +248,10 @@ It shows the names, locations (zone or region), and status of your clusters.\
 `gcloud container clusters delete aes-cluster --zone asia-east1-a --project aes-test-gke --quiet`
 
 ### Delete the bastion host instance
-`gcloud compute instances delete bastion-host --zone asia-east1-a --project aes-test-gke --quiet`
+`gcloud compute instances delete bastion-host --zone asia-east1-a --quiet`
+
+### To delete the reserved static IP address associated with your bastion host in Google Cloud
+`gcloud compute addresses delete bastion-ip --region asia-east1 --quiet`
 
 ### Delete the NAT router
 `gcloud compute routers delete nat-router --region asia-east1 --project aes-test-gke --quiet`
