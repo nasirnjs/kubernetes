@@ -248,22 +248,22 @@ It shows the names, locations (zone or region), and status of your clusters.\
 `gcloud container clusters delete aes-cluster --zone asia-east1-a --project aes-test-gke --quiet`
 
 ### Delete the bastion host instance
-gcloud compute instances delete bastion-host --zone asia-east1-a --project aes-test-gke --quiet
+`gcloud compute instances delete bastion-host --zone asia-east1-a --project aes-test-gke --quiet`
 
 ### Delete the NAT router
-gcloud compute routers delete nat-router --region asia-east1 --project aes-test-gke --quiet
+`gcloud compute routers delete nat-router --region asia-east1 --project aes-test-gke --quiet`
 
 ### Delete the NAT subnet
-gcloud compute networks subnets delete nat-subnet --region asia-east1 --project aes-test-gke --quiet
+`gcloud compute networks subnets delete nat-subnet --region asia-east1 --project aes-test-gke --quiet`
 
 ### Delete the GKE subnet
-gcloud compute networks subnets delete gke-c1 --region asia-east1 --project aes-test-gke --quiet
+`gcloud compute networks subnets delete gke-c1 --region asia-east1 --project aes-test-gke --quiet`
 
 ### Delete the custom network
-gcloud compute networks delete gke-1-net --project aes-test-gke --quiet
+`gcloud compute networks delete gke-1-net --project aes-test-gke --quiet`
 
 ### Delete the service account
-gcloud iam service-accounts delete aesgke@aes-test-gke.iam.gserviceaccount.com --quiet
+`gcloud iam service-accounts delete aesgke@aes-test-gke.iam.gserviceaccount.com --quiet`
 
 
 
