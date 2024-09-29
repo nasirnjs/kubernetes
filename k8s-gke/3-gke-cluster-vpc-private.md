@@ -43,14 +43,39 @@
 
 To make the GKE cluster private while enabling outbound internet access via Cloud NAT, follow these steps. This will ensure that the cluster's nodes do not have public IP addresses, but they can still access the internet for essential operations.
 
-1. Create the VPC Network
+
+1. Create a Service Account:
+
+Created a service account (bastion-sa) for the bastion host to access GKE.
+```bash
+gcloud iam service-accounts create bastion-sa \
+    --description="Service account for bastion host to access GKE" \
+    --display-name="bastion-sa" \
+    --project aes-test-gke
+
+```
+1.2 Assign IAM Roles:
+
+Granted necessary roles to the service account for accessing GKE and Compute Engine.
+
+```bash
+gcloud projects add-iam-policy-binding aes-test-gke \
+    --member="serviceAccount:bastion-sa@aes-test-gke.iam.gserviceaccount.com" \
+    --role="roles/container.admin"
+
+gcloud projects add-iam-policy-binding aes-test-gke \
+    --member="serviceAccount:bastion-sa@aes-test-gke.iam.gserviceaccount.com" \
+    --role="roles/compute.instanceAdmin"
+```
+
+2. Create the VPC Network
 ```
 gcloud compute networks create gke-1-net \
     --subnet-mode custom \
     --project aes-test-gke
 ```
 
-2. Create the NAT Subnet.\
+2.1 Create the NAT Subnet.\
 We need to create a dedicated subnet for NAT, which will allow the private GKE cluster's nodes to communicate with the internet.
 ```
 gcloud compute networks subnets create nat-subnet \
@@ -58,13 +83,13 @@ gcloud compute networks subnets create nat-subnet \
     --region=asia-east1 \
     --range=192.168.100.0/24
 ```
-3. Create the GKE Subnet.\
+2.3 Create the GKE Subnet.\
 You also already have the command for creating the primary GKE subnet, where the cluster nodes will reside.
 
 Confirm the details of the existing subnets in your project.\
 `gcloud compute networks subnets list --regions asia-east1 --project aes-test-gke`
 
-```
+```bash
 gcloud compute networks subnets create gke-c1 \
     --project aes-test-gke \
     --network gke-1-net \
@@ -72,13 +97,60 @@ gcloud compute networks subnets create gke-c1 \
     --region asia-east1
 ```
 
-4. Create the Firewall Rule for Control Plane.\
+3. Allocate External IP for Bastion Host:
+
+Created a static external IP address for the bastion host.
+
+```bash
+gcloud compute addresses create bastion-ip \
+    --region asia-east1 \
+    --project aes-test-gke
 ```
+
+To list the static external IP addresses in the asia-east1 region for your project aes-test-gke.\
+
+`gcloud compute addresses list --regions asia-east1 --project aes-test-gke`
+
+
+3.1 Create Bastion Host:
+
+Launched a bastion host instance with the appropriate settings, including a startup script to install kubectl.
+```bash
+gcloud compute instances create bastion-host \
+    --zone asia-east1-a \
+    --machine-type e2-medium \
+    --subnet gke-c1 \
+    --network-tier PREMIUM \
+    --tags bastion \
+    --image-family ubuntu-2204-lts \
+    --image-project ubuntu-os-cloud \
+    --boot-disk-size 10GB \
+    --boot-disk-type pd-balanced \
+    --boot-disk-device-name bastion-host \
+    --address 35.229.198.123 \
+    --service-account bastion-sa@aes-test-gke.iam.gserviceaccount.com \
+    --scopes https://www.googleapis.com/auth/cloud-platform
+
+```
+
+4. Create the Firewall Rule for Control Plane to allow bastion Host.\
+
+```bash
 gcloud compute firewall-rules create allow-control-plane \
     --allow tcp:443 \
-    --source-ranges 115.128.82.114/32 \
+    --source-ranges 35.189.176.82 \
     --network gke-1-net
 ```
+
+Create firewall rules for Bastion host allow SSH Connection
+```bash
+gcloud compute firewall-rules create allow-ssh-from-office \
+    --network gke-1-net \
+    --allow tcp:22 \
+    --source-ranges 115.127.82.114/32 \
+    --target-tags bastion
+```
+
 5. Create the Cloud Router.\
 This step sets up the Cloud Router, which is required for the NAT gateway.
 ```
@@ -101,7 +173,7 @@ gcloud compute routers nats create nat-config \
 ```
 7. Create the Private GKE Cluster.\
 Here, the GKE nodes will be private (i.e., without public IPs), and they will rely on Cloud NAT for outbound internet traffic:
-```
+```bash
 gcloud container clusters create aes-cluster \
     --zone asia-east1-a \
     --enable-master-authorized-networks \
@@ -117,113 +189,80 @@ gcloud container clusters create aes-cluster \
     --subnetwork gke-c1 \
     --metadata disable-legacy-endpoints=true \
     --enable-private-nodes \
-    --enable-private-endpoint
+    --enable-private-endpoint \
+    --master-authorized-networks 172.16.4.0/24 \
+    --service-account bastion-sa@aes-test-gke.iam.gserviceaccount.com \
+    --cluster-ipv4-cidr 10.0.0.0/14 \
+    --services-ipv4-cidr 10.32.0.0/16
 ```
 Explanation of Additional Flags:
 --enable-private-nodes: This makes the nodes private, without public IP addresses. \
 --enable-private-endpoint: The control plane (API server) will only be accessible via its private IP, ensuring full privacy for the cluster.
+--cluster-ipv4-cidr:  Defines the CIDR (Classless Inter-Domain Routing) range for the pod IP addresses within your cluster
+--services-ipv4-cidr: Defines the CIDR range for the ClusterIP service addresses
 
-Summary of the Setup:
-Private nodes (no public IPs).\
-Cloud NAT is configured to allow the nodes to access the internet.\
-The control plane is protected by a firewall rule that only allows access from a specific IP (your work station).
 
----
+1. SSH into Bastion Host:
 
-## Step 1: Create a Bastion Host VM
+Accessed the bastion host via SSH.
 
-### Reserve a Static External IP within Google Cloud: You need to reserve a static external IP address in the same region (asia-east1) for your bastion host.
-```bash
-gcloud compute addresses create bastion-ip \
-    --region asia-east1 \
-    --project aes-test-gke
-```
-###
-List the Static External IP: Retrieve the static external IP address that was just created.
-`gcloud compute addresses list --regions asia-east1 --project aes-test-gke`
-
-```bash
-gcloud compute instances create bastion-host \
-    --zone asia-east1-a \
-    --machine-type e2-medium \
-    --subnet gke-c1 \
-    --network-tier PREMIUM \
-    --tags bastion \
-    --metadata=startup-script='#!/bin/bash
-    sudo apt-get update && sudo apt-get install -y kubectl' \
-    --image-family ubuntu-2204-lts \
-    --image-project ubuntu-os-cloud \
-    --boot-disk-size 10GB \
-    --boot-disk-type pd-balanced \
-    --boot-disk-device-name bastion-host \
-    --address 35.189.176.82
-
-```
-
-## Step 2: Configure Firewall Rules
-
-```bash
-gcloud compute firewall-rules create allow-ssh-from-office \
-    --network gke-1-net \
-    --allow tcp:22 \
-    --source-ranges 115.127.82.114/32 \
-    --target-tags bastion
-```
-
-Allow Internal Traffic Between Bastion and GKE
-
-```
-gcloud compute firewall-rules create allow-bastion-internal \
-    --network gke-1-net \
-    --allow tcp,udp,icmp \
-    --source-tags bastion \
-    --target-tags gke-c1
-```
-
-Step 3: SSH into the Bastion Host
-Use the following command to SSH into your newly created bastion host.\
 `gcloud compute ssh bastion-host --zone asia-east1-a`
 
+9. Install Google Cloud SDK:
 
-Step 4: Configure kubectl on the Bastion Host
+Downloaded and installed the Google Cloud SDK.
+
 ```bash
-gcloud container clusters get-credentials aes-cluster \
-    --zone asia-east1-a \
-    --project aes-test-gke
+wget https://dl.google.com/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
+tar -xf google-cloud-sdk.tar.gz
+cd google-cloud-sdk
+./install.sh
 ```
-Verify access to the cluster.\
+
+10. Configure SDK and Get Cluster Credentials:
+
+Updated your environment and initialized the SDK to access the GKE cluster.
+
+```bash
+vim ~/.bashrc
+export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+source ~/.bashrc
+gcloud version
+gcloud init
+cd /
+gcloud components install kubectl
+gcloud components install gke-gcloud-auth-plugin
+kubectl version --clien
+gcloud container clusters get-credentials aes-cluster --zone asia-east1-a --project aes-test-gke
+```
+
 `kubectl get nodes`
 
 
 It shows the names, locations (zone or region), and status of your clusters.\
 `gcloud container clusters list --project=aes-test-gke`
 
-This command retrieves the authentication credentials (kubeconfig) for the aes-cluster.\
-`gcloud container clusters get-credentials aes-cluster --zone=asia-east1-a --project=aes-test-gke`
-
-This command deletes the aes-cluster in the asia-east1-a zone. It will prompt for confirmation before deletion and permanently removes the cluster, along with all associated resources, (except any persistent disks or external load balancers unless manually removed).\
-`gcloud container clusters delete aes-cluster --zone=asia-east1-a --project=aes-test-gke`
 
 ---
-# Delete the Kubernetes cluster
-gcloud container clusters delete aes-cluster --zone asia-east1-a --project aes-test-gke --quiet
+### Delete the Kubernetes cluster
+`gcloud container clusters delete aes-cluster --zone asia-east1-a --project aes-test-gke --quiet`
 
-# Delete the bastion host instance
+### Delete the bastion host instance
 gcloud compute instances delete bastion-host --zone asia-east1-a --project aes-test-gke --quiet
 
-# Delete the NAT router
+### Delete the NAT router
 gcloud compute routers delete nat-router --region asia-east1 --project aes-test-gke --quiet
 
-# Delete the NAT subnet
+### Delete the NAT subnet
 gcloud compute networks subnets delete nat-subnet --region asia-east1 --project aes-test-gke --quiet
 
-# Delete the GKE subnet
+### Delete the GKE subnet
 gcloud compute networks subnets delete gke-c1 --region asia-east1 --project aes-test-gke --quiet
 
-# Delete the custom network
+### Delete the custom network
 gcloud compute networks delete gke-1-net --project aes-test-gke --quiet
 
-# Delete the service account
+### Delete the service account
 gcloud iam service-accounts delete aesgke@aes-test-gke.iam.gserviceaccount.com --quiet
 
 
