@@ -9,3 +9,6 @@ spec:
   containers:
   - name: my-container
     image: nginx
+
+---
+#kubectl run new-pod --image=nginx --namespace=default --as=system:serviceaccount:default:dashboard-sa
