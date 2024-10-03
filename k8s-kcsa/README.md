@@ -57,10 +57,19 @@
 
 
 ---
-#### Question 6 Infrastructure security primarily focuses on:
 
-- [ ] A. Testing environment security
-- [ ] B. Standard cyber security
-- [x] C. Security of underlying operating systems
-- [ ] D. Securing applications
 
+[Note-1](https://github.com/riquetta/KCSA/wiki#important-note)
+
+[Note-2](https://www.linkedin.com/pulse/kcsa-kubernetes-cloud-native-security-associate-exam-guide-pachkale-k7vvc/)
+
+
+## Kubernetes Cluster Component Security (22%)
+
+[Audit policy](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+
+
+
+
+### Kubernetes Threat Model (16%)
+[OWASP Top Ten](https://owasp.org/www-project-kubernetes-top-ten/)
