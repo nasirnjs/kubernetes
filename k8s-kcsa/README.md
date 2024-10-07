@@ -77,6 +77,170 @@
 
 ### MCQ Questions
 
+
+1. **Which of the following frameworks provides benchmarks and controls for securing cloud environments?**
+   - [ ] a) ISO/IEC 27001
+   - [x] b) CIS
+   - [ ] c) PCI DSS
+   - [ ] d) SOC 2
+
+2. **The NIST Cybersecurity Framework is structured around which core function?**
+   - [ ] a) Encrypt
+   - [x] b) Recover
+   - [ ] c) Authenticate
+   - [ ] d) Validate
+
+3. **Which of the following is a major focus of the Cloud Security Alliance (CSA)?**
+   - [ ] a) Data analysis techniques
+   - [x] b) Cloud Controls Matrix (CCM)
+   - [ ] c) Incident Response Guides
+   - [ ] d) User Experience Design
+
+4. **The MITRE ATT&CK Framework is primarily used for which of the following purposes?**
+   - [ ] a) Monitoring cloud performance
+   - [x] b) Documenting cyber adversary tactics and techniques
+   - [ ] c) Enhancing user authentication methods
+   - [ ] d) Configuring backup policies
+
+5. **Which of the following standards is used for establishing an Information Security Management System (ISMS)?**
+   - [ ] a) CIS
+   - [x] b) ISO/IEC 27001
+   - [ ] c) NIST CSF
+   - [ ] d) MITRE ATT&CK
+
+6. **What is the purpose of the CIS benchmarks in cloud security?**
+   - [ ] a) Identifying cloud pricing models
+   - [x] b) Establishing secure configuration guidelines
+   - [ ] c) Managing public cloud costs
+   - [ ] d) Encrypting data at rest
+
+7. **The NIST Cybersecurity Framework was recently updated to which version?**
+   - [ ] a) NIST CSF 1.5
+   - [x] b) NIST CSF 2.0
+   - [ ] c) NIST CSF 3.0
+   - [ ] d) NIST CSF 1.1
+
+8. **The Cloud Security Alliance (CSA) provides which of the following to assist organizations in securing cloud services?**
+   - [ ] a) Cloud Compliance Mechanism
+   - [x] b) Cloud Controls Matrix (CCM)
+   - [ ] c) Virtual Threat Analyzer
+   - [ ] d) Cloud Firewall Guidelines
+
+9. **Which of the following best describes the MITRE ATT&CK Cloud Matrix?**
+   - [ ] a) A tool for identifying hardware issues
+   - [ ] b) A matrix for analyzing cloud security incidents
+   - [ ] c) A guide for monitoring cloud-based applications
+   - [x] d) A knowledge base of adversary tactics and techniques for cloud environments
+
+10. **Which international standard demonstrates an organization's commitment to information security, particularly in cloud environments?**
+    - [ ] a) SOC 2 Type II
+    - [x] b) ISO/IEC 27001
+    - [ ] c) CIS Benchmarking
+    - [ ] d) CSA STAR Certification
+
+11. **Which of the following is a feature of the CIS benchmarks for cloud environments?**
+    - [ ] a) Real-time incident response automation
+    - [x] b) Identity and access management guidelines
+    - [ ] c) Vendor-specific pricing models for cloud services
+    - [ ] d) Cloud performance optimization tools
+
+12. **Which aspect of cloud security does the CIS emphasize for maintaining a secure baseline configuration?**
+    - [ ] a) Custom encryption algorithms
+    - [ ] b) Hardware-based security keys
+    - [x] c) Activity logging and monitoring
+    - [ ] d) Multi-cloud cost reduction strategies
+
+13. **The five core functions of the NIST Cybersecurity Framework include Protect and Respond. Which of the following is another core function?**
+    - [ ] a) Mitigate
+    - [x] b) Detect
+    - [ ] c) Encrypt
+    - [ ] d) Monitor
+
+14. **How does the NIST Cybersecurity Framework help organizations deal with cybersecurity risk in cloud environments?**
+    - [ ] a) By providing cloud storage capacity guidelines
+    - [x] b) By outlining five core cybersecurity functions
+    - [ ] c) By mandating the use of proprietary software
+    - [ ] d) By restricting access to open-source tools
+
+15. **The Cloud Controls Matrix (CCM) provided by CSA covers key cloud security domains. Which of the following is NOT directly covered by CCM?**
+    - [ ] a) Compliance
+    - [ ] b) Identity management
+    - [ ] c) Data security
+    - [x] d) Business process reengineering
+
+16. **The CSA's CCM Lite version is most appropriate for which of the following types of organizations?**
+    - [ ] a) Large enterprises
+    - [ ] b) Financial institutions
+    - [ ] c) Government agencies
+    - [x] d) Small and medium-sized businesses (SMBs)
+
+17. **Which of the following is a major benefit of using the MITRE ATT&CK Framework in cloud security?**
+    - [ ] a) Cost reduction for cloud infrastructure
+    - [ ] b) Automated disaster recovery
+    - [x] c) Identification and categorization of attacker techniques
+    - [ ] d) Real-time hardware diagnostics
+
+18. **How does the MITRE ATT&CK Cloud Matrix assist organizations with their cloud security?**
+    - [ ] a) By providing encryption standards
+    - [x] b) By detailing cloud-specific attack vectors and mitigation strategies
+    - [ ] c) By offering pricing comparisons for cloud vendors
+    - [ ] d) By optimizing cloud resource allocation
+
+19. **Which of the following statements is true regarding ISO/IEC 27001?**
+    - [ ] a) It applies only to cloud-based information systems.
+    - [x] b) It provides guidelines for implementing an Information Security Management System (ISMS).
+    - [ ] c) It focuses exclusively on network security.
+    - [ ] d) It is a non-compliant framework for cloud security.
+
+20. **Which security standard includes measures for both cloud and on-premises data security management?**
+    - [ ] a) NIST Cybersecurity Framework
+    - [x] b) ISO/IEC 27001
+    - [ ] c) MITRE ATT&CK
+    - [ ] d) Cloud Security Alliance CCM
+
+21. **The NIST Cybersecurity Framework encourages organizations to continuously improve their security practices. Which element of the framework supports this approach?**
+    - [ ] a) Static compliance checklists
+    - [ ] b) Regularly updated benchmarks
+    - [x] c) Risk assessment and feedback loop
+    - [ ] d) Permanent security rules
+
+22. **Which of the following best describes the role of continuous monitoring in the CIS framework?**
+    - [ ] a) To provide real-time pricing insights
+    - [x] b) To ensure compliance with security controls over time
+    - [ ] c) To automatically deploy new cloud instances
+    - [ ] d) To disable unused cloud services
+
+23. **The Cloud Controls Matrix (CCM) from CSA can help organizations achieve compliance with which of the following regulatory standards?**
+    - [x] a) GDPR and HIPAA
+    - [ ] b) PCI-DSS and local tax regulations
+    - [ ] c) US Securities and Exchange Commission rules
+    - [ ] d) International Sales Tax Guidelines
+
+24. **Which feature of the NIST CSF 2.0 differentiates it from earlier versions?**
+    - [ ] a) Fewer core functions
+    - [x] b) More focus on cloud native environments
+    - [ ] c) Only applicable to private cloud
+    - [ ] d) Discontinuation of recovery capabilities
+
+25. **What is the main advantage of adopting ISO/IEC 27001 for an organization using cloud services?**
+    - [ ] a) Compliance with pricing standards for cloud services
+    - [x] b) Improved Information Security Management System (ISMS) integration
+    - [ ] c) Reduction in cloud infrastructure costs
+    - [ ] d) Automation of all security measures
+
+26. **The CSA STAR Certification is most closely associated with which other standard?**
+    - [ ] a) PCI-DSS
+    - [x] b) ISO/IEC 27001
+    - [ ] c) HIPAA
+    - [ ] d) SOX
+
+27. **What are the five core functions of the NIST Cybersecurity Framework?**
+    - [x] a) Identify, Protect, Detect, Respond, Recover
+    - [ ] b) Detect, Mitigate, Encrypt, Respond, Analyze
+    - [ ] c) Analyze, Detect, Encrypt, Mitigate, Recover
+    - [ ] d) Protect, Respond, Encrypt, Identify, Analyze
+---
+
 1. **Which Kubernetes resource is primarily used to request the issuance of an X.509 certificate?**
    - [ ] a) Pod
    - [ ] b) Deployment
@@ -138,8 +302,6 @@
     - [ ] d) Signed
 
 ---
-### MCQ Questions
-
 1. **What is the purpose of the OWASP Kubernetes Top 10?**
    - [ ] a) To provide a guide for developing applications in Kubernetes
    - [x] b) To help prioritize security risks in the Kubernetes ecosystem
@@ -516,9 +678,7 @@
     - [x] B. API Server
     - [ ] C. Container
     - [ ] D. Master Components
-
 ---
-## MCQ Questions on Persistence Tactics in Kubernetes
 
 1. **What is the purpose of a backdoor container in a Kubernetes environment?**
    - [x] A. To maintain persistent access to the cluster even if the initial foothold is lost.
@@ -581,8 +741,6 @@
     - [ ] D. Regular updates to Kubernetes components only.
 
 ---
-### ATT&CK Framework Multiple-Choice Questions
-
 1. **The ATT&CK framework is primarily designed to:**
     - [x] A. Document adversary tactics and techniques based on real-world observations.
     - [ ] B. Provide a security product for purchase.
