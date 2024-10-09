@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: Assign-Pods-to-Nodes
+  name: assign-pods-to-nodes
 spec:
   replicas: 3
   selector:
