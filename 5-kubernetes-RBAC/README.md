@@ -49,14 +49,14 @@ To create a Role named pod-reader in the default namespace with permissions to g
 
 Step 3: Create the RoleBinding Imperatively.\
 To create a RoleBinding named read-pods-binding that binds the pod-reader Role to a user named jane.\
-`kubectl create rolebinding read-pods-binding --role=pod-reader --user=jane --namespace=default`
+`kubectl create rolebinding read-pods-binding --role=pod-reader --serviceaccount=default:jeni --namespace=default`
 
 Step 4: Test the Permissions.\
 You can test the permissions using.\
-`kubectl get pods -n default --as=jane`
+`kubectl get pods -n default --as=system:serviceaccount:default:jeni`
 
 Step 5: Make sure your jane service account has no permissions to create pods.\
-`kubectl run new-pod --image=nginx --namespace=default --as=system:serviceaccount:default:jane`
+`kubectl run new-pod --image=nginx --namespace=default --as=system:serviceaccount:default:jeni`
 
 
 ## Kubernetes RBAC
