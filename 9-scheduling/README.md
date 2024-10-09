@@ -5,9 +5,15 @@
 
 `kubectl label nodes k8-worker1 environment=production`
 
+To schedule a pod only on nodes with disktype=ssd, you would use a nodeSelector in your pod's YAML specification. *Yaml file 1-assign-pod-node-depl.yaml*
+
 `kubectl get node k8-worker1 --show-labels`
 
+If you want to remove the environment=production label from k8-worker1, you would execute.\
+`kubectl label nodes k8-worker1 environment-`
 
+After removing the labels, you can verify that the labels have been successfully removed by running.\
+`kubectl get node k8-worker1 --show-labels`
 
 ## Affinity and anti-affinity
 [References](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#operators)
