@@ -146,7 +146,7 @@ Verify the HPA deployment.\
 So far, we have set up our EKS cluster, installed the Metrics Server, deployed a sample application, and created an associated Kubernetes service for the application. We also deployed HPA, which will monitor and adjust our resources.
 
 `ab [options] [http[s]://]hostname[:port]/path`\
-`ab -n 10000000 -c 1000 http://172.17.18.211:80`
+`ab -n 10000000 -c 1000 http://172.17.18.241/index.html`
 
 Options:
 
