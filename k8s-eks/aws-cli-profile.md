@@ -39,7 +39,7 @@ When Deleting an AWS CLI Profile:
 **Verify list of Profiles**\
 `aws configure list`
 
-**Check which AWS profile you are currently  Active Profile.**
+**Check which AWS profile you are currently  Active Profile.**\
 `echo $AWS_PROFILE`
 
 **Conclusion**\
