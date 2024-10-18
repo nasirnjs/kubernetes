@@ -39,5 +39,8 @@ When Deleting an AWS CLI Profile:
 **Verify list of Profiles**\
 `aws configure list`
 
+**Check which AWS profile you are currently  Active Profile.**
+`echo $AWS_PROFILE`
+
 **Conclusion**\
 Managing multiple AWS CLI profiles allows you to work seamlessly across different AWS accounts and environments. By following this guide, you can easily set up, use, and delete profiles as needed. This flexibility is crucial for developers, DevOps engineers, and anyone managing resources in AWS.
