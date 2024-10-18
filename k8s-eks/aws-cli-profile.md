@@ -18,7 +18,7 @@ To create a separate profile, use the following command:\
 `export AWS_PROFILE=nasir-at`
 
 **Step 4: Check the Active Profile.**\
-Run the following command to check which profile is currently active
+Run the following command to check which profile is currently active.\
 `aws configure list`
 
 **Step 5: Use a Specific Profile.**\
@@ -36,7 +36,7 @@ When Deleting an AWS CLI Profile:
    - This file typically contains additional configuration settings, such as default regions and output formats.
    - If the profile has an entry here (e.g., `[profile nasir-at]`), you'll need to delete that section as well.
 
-**Verify list of Profiles**
+**Verify list of Profiles**\
 `aws configure list`
 
 **Conclusion**\
