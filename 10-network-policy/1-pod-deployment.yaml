@@ -47,14 +47,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: unknown-app
+      role: db-external-connect
   template:
     metadata:
       labels:
-        app: unknown-app
+        role: db-external-connect
     spec:
       containers:
       - name: unknown-container
         image: nginx
         ports:
-        - containerPort: 8080
+        - containerPort: 80
