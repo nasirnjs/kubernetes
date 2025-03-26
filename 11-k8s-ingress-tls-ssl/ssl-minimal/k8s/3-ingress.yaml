@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-services
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - eshosting.com
+    secretName: letsencrypt-prod
+  rules:
+  - host: eshosting.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nasir-python
+            port:
+              number: 80
