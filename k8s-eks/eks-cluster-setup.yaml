@@ -25,6 +25,7 @@ managedNodeGroups:
 #     roleName: karpenter-c1-karpenter
 #     permissionPolicyARNs:
 #     - arn:aws:iam::605134426044:policy/KarpenterControllerPolicy-karpenter-c1
+
 # iamIdentityMappings:
 # - arn: "arn:aws:iam::605134426044:role/KarpenterNodeRole-karpenter-c1"
 #   username: system:node:{{EC2PrivateDNSName}}
