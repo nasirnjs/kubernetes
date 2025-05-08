@@ -7,7 +7,7 @@ Karpenter is an open-source autoscaler for Kubernetes developed by AWS. It autom
 - An existing Amazon EKS cluster (1.21+)
 - kubectl, eksctl, helm, and aws CLI installed and configured
 - IAM permissions to create roles and policies
-- jq and curl installed (for scripting convenience)
+
 
 ## Step 1: Set Environment Variables
 
@@ -15,11 +15,9 @@ Karpenter is an open-source autoscaler for Kubernetes developed by AWS. It autom
 export KARPENTER_NAMESPACE="kube-system"
 export KARPENTER_VERSION="1.4.0"
 export K8S_VERSION="1.31"
-```
-```bash
 export AWS_PARTITION="aws"
-export CLUSTER_NAME="nasir-eks-cluster"
-export AWS_DEFAULT_REGION="us-east-1"
+export CLUSTER_NAME="karpenter-c1"
+export AWS_DEFAULT_REGION="us-east-2"
 export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 export TEMPOUT="$(mktemp)"
 export ALIAS_VERSION="$(aws ssm get-parameter --name "/aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023/x86_64/standard/recommended/image_id" --query Parameter.Value | xargs aws ec2 describe-images --query 'Images[0].Name' --image-ids | sed -r 's/^.*(v[[:digit:]]+).*$/\1/')"
@@ -46,7 +44,9 @@ for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --qu
         --resources $(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
         --nodegroup-name "${NODEGROUP}" --query 'nodegroup.subnets' --output text )
 done
+```
 
+```bash
 NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --query 'nodegroups[0]' --output text)
 LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' --output text | tr -s "\t" ",")
 
@@ -64,25 +64,24 @@ aws ec2 create-tags \
 
 define both the IAM service account for Karpenter and the IAM identity mapping for EC2 worker nodes in a single eksctl YAML config file.
 
-`eksctl create addon --cluster nasir-eks-cluster --name eks-pod-identity-agent`
+`eksctl create addon --cluster karpenter-c1 --name eks-pod-identity-agent`
 
 `vim podidentityassociation.yaml`
 
 ```bash
 apiVersion: eksctl.io/v1alpha5
-kind: PodIdentityAssociation
-
+kind: ClusterConfig
 metadata:
-  name: karpenter-association
-  cluster: nasir-eks-cluster
-  region: us-east-1
+  name: karpenter-c1  # Must match existing cluster
+  region: us-east-2   # Must match cluster region
 
-spec:
-  namespace: kube-system
-  serviceAccountName: karpenter
-  roleName: nasir-eks-cluster-karpenter
-  permissionPolicyARNs:
-    - arn:aws:iam::605134426044:policy/KarpenterControllerPolicy-nasir-eks-cluster
+iam:
+  podIdentityAssociations:
+    - namespace: kube-system
+      serviceAccountName: karpenter
+      roleName: karpenter-c1-karpenter
+      permissionPolicyARNs:
+        - arn:aws:iam::605134426044:policy/KarpenterControllerPolicy-karpenter-c1
 ```
 `eksctl create podidentityassociation -f podidentityassociation.yaml`
 
@@ -90,19 +89,17 @@ spec:
 
 ```bash
 apiVersion: eksctl.io/v1alpha5
-kind: IAMIdentityMapping
-
+kind: ClusterConfig
 metadata:
-  name: karpenter-node-mapping
-  cluster: nasir-eks-cluster
-  region: us-east-1
+  name: karpenter-c1   # Must match your cluster name
+  region: us-east-2    # Must match your cluster region
 
-spec:
-  arn: arn:aws:iam::605134426044:role/KarpenterNodeRole-nasir-eks-cluster
-  username: system:node:{{EC2PrivateDNSName}}
-  groups:
-    - system:bootstrappers
-    - system:nodes
+iamIdentityMappings:
+  - arn: "arn:aws:iam::605134426044:role/KarpenterNodeRole-karpenter-c1"
+    username: system:node:{{EC2PrivateDNSName}}
+    groups:
+      - system:bootstrappers
+      - system:nodes
 ```
 
 `eksctl create iamidentitymapping -f iamidentitymapping.yaml`
