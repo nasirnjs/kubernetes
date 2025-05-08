@@ -8,7 +8,7 @@ metadata:
 
 managedNodeGroups:
   - name: ng-b2
-    instanceTypes: [c5.xlarge]
+    instanceTypes: [c5.large]
     minSize: 1
     maxSize: 4
     desiredCapacity: 1
