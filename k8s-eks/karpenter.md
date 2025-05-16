@@ -60,9 +60,22 @@ aws ec2 create-tags \
   --resources "${SECURITY_GROUPS}"
 ```
 
-## Setup Pod Identity and Maping setup
+## Pod Identity and Maping setup
 
-define both the IAM service account for Karpenter and the IAM identity mapping for EC2 worker nodes in a single eksctl YAML config file.
+ **EKS-pod-identity-agent⚙️**\
+⚙️ Purpose: A background agent that injects temporary AWS credentials into pods using PodIdentityAssociation.\
+📦 Why it's needed: Enables the Karpenter controller pod to get credentials to call AWS APIs (like EC2).
+
+**PodIdentityAssociation🪪**\
+🪪 Purpose: Binds a Kubernetes service account (used by Karpenter) to an AWS IAM role.\
+🔐 Why it's needed: So Karpenter can securely assume an IAM role to launch and manage EC2 instances.
+
+**IAM Identity Mapping (aws-auth ConfigMap)🧾**\
+🛂 Purpose: Allows EC2 instances (provisioned by Karpenter) to authenticate and join the EKS cluster.\
+📡 Why it's needed: Without this, new nodes won’t be recognized by the EKS control plane.
+
+
+Define both the IAM service account for Karpenter and the IAM identity mapping for EC2 worker nodes in a single eksctl YAML config file.
 
 `eksctl create addon --cluster karpenter-c1 --name eks-pod-identity-agent`
 

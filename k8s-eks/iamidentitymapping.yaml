@@ -1,11 +1,11 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: karpenter-c1   # Must match your cluster name
-  region: us-east-2    # Must match your cluster region
+  name: your-cluster3   # Must match your cluster name
+  region: us-east-1    # Must match your cluster region
 
 iamIdentityMappings:
-  - arn: "arn:aws:iam::605134426044:role/KarpenterNodeRole-karpenter-c1"
+  - arn: "arn:aws:iam::605134426044:role/KarpenterNodeRole-your-cluster3"
     username: system:node:{{EC2PrivateDNSName}}
     groups:
       - system:bootstrappers

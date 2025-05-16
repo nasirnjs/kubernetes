@@ -1,13 +1,13 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: karpenter-c1  # Must match existing cluster
-  region: us-east-2   # Must match cluster region
+  name: your-cluster3  # Must match existing cluster
+  region: us-east-1   # Must match cluster region
 
 iam:
   podIdentityAssociations:
     - namespace: kube-system
       serviceAccountName: karpenter
-      roleName: karpenter-c1-karpenter
+      roleName: your-cluster3-karpenter
       permissionPolicyARNs:
-        - arn:aws:iam::605134426044:policy/KarpenterControllerPolicy-karpenter-c1
+        - arn:aws:iam::605134426044:policy/KarpenterControllerPolicy-your-cluster3
