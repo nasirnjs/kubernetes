@@ -2,8 +2,8 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: your-cluster3
-  region: us-east-1
+  name: meetup-may2025
+  region: us-east-2
   version: "1.31"
 
 managedNodeGroups:
