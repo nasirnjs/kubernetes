@@ -10,7 +10,7 @@
       "Condition": {
         "StringEquals": {
           "oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989B45BB31C0321016DAB28:aud": "sts.amazonaws.com",
-          "oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989B45BB31C0321016DAB28:sub": "system:serviceaccount:kube-system:cluster-autoscaler"
+          "oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989B45BB31C0321016DAB28:sub": "system:serviceaccount:kube-system:alb-ingress-controller"
         }
       }
     }

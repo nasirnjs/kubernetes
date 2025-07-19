@@ -1,5 +1,6 @@
+# Complete Guide to Deploying Amazon EKS Cluster Autoscaler
 
-## Steps 1: Create IAM Policy for Cluster Autoscaler
+## Steps 1: Create IAM Policy for Cluster Autoscaler [Get Policy](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md)
 
 `aws iam create-policy --policy-name AmazonEKSClusterAutoscalerPolicy --policy-document file://2.0-autoscaler-iam-policy.json`
 
@@ -59,7 +60,7 @@ Attach Policy with Cluster Auto Scaler Role Using ARN.
 
 `vim 2.2-cluster-autoscaler-autodiscover.yaml`
 
-**Note: Before apply uUse the retrieved OIDC provider and AWS account ID to create autoscaler-trust-policy.json**
+**Note: Before apply, retrieved OIDC provider and AWS account ID to create autoscaler-trust-policy.json**
 
 **Update 4.1:** Add IAM Role Annotation to ServiceAccount
 ```bash
@@ -82,12 +83,12 @@ metadata:
 
 ```bash
 containers:
-   - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.32.1
+   - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.31.1
 ```
 **Update 4.3:** Set Correct Cluster Name for Auto Discovery
 
 ```bash
-- --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/buddy-cluster
+- --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/meetup-may2025
 ```
 **Apply EKS cluster autoscaler-autodiscover manifest file**\
 `kubectl apply -f 2.2-cluster-autoscaler-autodiscover.yaml`
