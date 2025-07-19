@@ -1,0 +1,20 @@
+# alertmanager:
+#   alertmanagerSpec:
+#     configSecret: alertmanager-monitoring
+
+# Enable necessary components
+grafana:
+  enabled: true
+  adminPassword: "admin123"  # Change this later!
+  service:
+    type: LoadBalancer
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    maximumStartupDurationSeconds: 300

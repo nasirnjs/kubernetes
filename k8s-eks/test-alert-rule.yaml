@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: test-alert
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: test.rules
+      rules:
+        - alert: DiscordTestAlert
+          expr: vector(1)
+          for: 10s
+          labels:
+            severity: warning
+          annotations:
+            summary: "Test alert to Discord"
+            description: "This is a test alert from Prometheus to Discord via Alertmanager."
