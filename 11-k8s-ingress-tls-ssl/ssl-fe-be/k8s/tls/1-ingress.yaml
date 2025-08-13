@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: stu-mnm-app-ingress
-  namespace: default
+  namespace: prod
   annotations:
     nginx.ingress.kubernetes.io/use-regex: 'true'
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - cloudopsschool.com
+    - app.yourmentors.io
     secretName: letsencrypt-prod
   rules:
-  - host: cloudopsschool.com
+  - host: app.yourmentors.io
     http:
       paths:
       - pathType: ImplementationSpecific
