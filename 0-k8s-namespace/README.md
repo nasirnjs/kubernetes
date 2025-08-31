@@ -8,7 +8,7 @@
 - [Kubens tools](#kubens-tools)
 
 ## Kubernetes Namespace
-A Kubernetes namespace is a virtual cluster within a Kubernetes cluster. It is a way to divide cluster resources into separate virtual clusters, allowing you to organize and isolate different workloads or environments within the same physical cluster.
+In Kubernetes, namespaces provide a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace isolate different workloads or environments within the same physical cluster.
 
 ## Namespaces benefits
 - **Resource isolation**: Each namespace has its own set of resources, such as pods, services, and storage volumes. This allows you to isolate workloads from each other, preventing interference and conflicts.
