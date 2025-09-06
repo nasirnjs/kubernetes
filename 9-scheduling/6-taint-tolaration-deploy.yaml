@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-deployment
+  name: nginx-deployment
+  labels:
+    app: nginx
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: example
+      app: nginx
   template:
     metadata:
       labels:
-        app: example
+        app: nginx
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:alpine-perl
         ports:
         - containerPort: 80
       tolerations:
-      - key: "key1"
+      - key: "dedicated"
         operator: "Equal"
-        value: "value1"
+        value: "backend"
         effect: "NoSchedule"

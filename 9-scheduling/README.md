@@ -95,14 +95,124 @@ affinity:
 - **Behavior**: Checks for the absence of specific label values within the supplied set of strings. It does not specifically check for the absence of the label itself but rather for specific values.
 
 ## Taints and Tolerations
+
+### Taints
 Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.
 
+Effects explained:
+**- NoSchedule:** Pods cannot be scheduled on this node unless they tolerate the taint.
+**- PreferNoSchedule:** Kubernetes tries to avoid scheduling pods without toleration, but it may schedule them if necessary.
+**- NoExecute:** Pods without toleration are evicted immediately if running, and new pods cannot schedule.
+
+### Tolerations
 Tolerations are applied to pods. Tolerations allow the scheduler to schedule pods with matching taints. Tolerations allow scheduling but don't guarantee scheduling: the scheduler also evaluates other parameters as part of its function.
 
-You add a taint to a node using kubectl tain.\
-`kubectl taint nodes node1 key1=value1:NoSchedule`
+- Applied to: Pods
+- Purpose: Tolerations allow a pod to be scheduled on nodes with matching taints.
 
-To remove the taint added by the command above, you can run.\
-`kubectl taint nodes node1 key1=value1:NoSchedule-`
+
+**Operator:** The operator in a toleration defines how the toleration matches a node’s taint.
+
+**1. Equal**
+- The pod tolerates a taint only if both the key AND value match exactly.
+- Use when you want the pod to tolerate a specific taint on a node.
+
+**2. Exists**
+- The pod tolerates a taint if the key exists, ignoring the value.
+- Use when you want the pod to tolerate any value for a given key, or all taints if the key is empty.
+- flexible matching (key only or all keys if key is empty)
+
+
+**NoSchedule Example: Dedicated nodes for certain workloads (e.g., GPU nodes)**
+
+`kubectl taint nodes worker-2 dedicated=backend:NoSchedule`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine-perl
+        ports:
+        - containerPort: 80
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "backend"
+        effect: "NoSchedule"
+```
+Check nginx-deployment pods tolerations.\
+`kubectl describe pod nginx-deployment | grep -A5 Tolerations`
+
+`kubectl drain worker-1 --ignore-daemonsets --delete-emptydir-data`
+
+`kubectl run nginx-pod --image=nginx --restart=Never`
+
+To remove a taint from a node and check nginx-pod is schedule to worker-2.\
+`kubectl taint nodes worker-2 dedicated=backend:NoSchedule-`
+
+Schedule pods on worker-1 again need to uncordon.\
+`kubectl uncordon worker-1`
+
+**PreferNoSchedule Example: Scheduler tries to avoid placing pods on this node.**
+
+`kubectl taint nodes worker-1 optimized=high:PreferNoSchedule`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-prefer
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine-perl
+        ports:
+        - containerPort: 80
+      tolerations:
+      - key: "optimized"
+        operator: "Exists"
+        effect: "PreferNoSchedule"
+```
+If no other nodes are available or resources require it, the pod may still schedule here.
+
+To remove a taint from a node.\
+`kubectl taint nodes worker-1 optimized:PreferNoSchedule-`
+
+
+**NoExecute Example**
+
+`kubectl create deployment my-app --image=nginx --replicas=2`
+
+
+`kubectl taint nodes worker-2 maintenance=true:NoExecute`
+
+``
+
 
 [Reference](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
