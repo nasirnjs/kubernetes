@@ -9,8 +9,20 @@
 **Key Insight:** Consumers work as part of a **Consumer Group**, which is the logical unit of parallelism. The **consumer offset** is a core concept, representing their position in the log.
 
 **Topic:** A category/feed name. A logical entity that is physically manifested as a set of partitions distributed across brokers.
+- A logical category or feed name where messages are published (e.g., user-signup).
+- A single topic can have multiple partitions.
+- Partitions provide scalability, allow multiple consumers to process messages in parallel, and maintain ordering within each partition.
 
-*Example: Topic Name: user-signup*
+**Example A single topic can have multiple partitions**
+
+**Topic:** `user-signup` → 3 partitions:
+
+| Partition | Messages       |
+|-----------|----------------|
+| 0         | m1, m4, m7    |
+| 1         | m2, m5, m8    |
+| 2         | m3, m6, m9    |
+
 
 **Key Points:**
 - Producers write signup events to the user-signup topic.
@@ -42,6 +54,7 @@ Imagine a massive, highly organized **Post Office Distribution Center**:
 ## 2. Partitions & Replication: The Heart of Scalability & Durability
 
 **Partition:** A topic is split into partitions. This is the unit of parallelism.  
+- A physical log inside a topic. Each partition is ordered, immutable, and stored on a broker.
 - Each partition is an ordered, immutable sequence of records (a commit log).  
 - Records are assigned a unique, sequential ID called an **offset**.
 - Kafka stores partition data on disk as **log segments**.
@@ -157,3 +170,40 @@ Example: keep up to 10 GB per partition, then remove the oldest segments.
 | 2         | Broker-3| Broker-1       | Broker-2       |
 
 > Distribution ensures no single broker is leader for all partitions, spreading load evenly.
+
+## Message (Record) Structure
+Each Kafka message (also called a record) has:
+- Key → Optional. Used for partitioning and ensuring ordering if present.
+- Value → Required. The actual payload (e.g., JSON, Avro, string, binary).
+- Timestamp → Event time (set by producer) or log append time (set by broker). Optional if producer doesn’t provide.
+- Headers → Optional metadata as key-value pairs.
+- Offset → Unique sequential ID assigned by the broker for each partition.
+
+## Producer (Message Publisher)
+
+1. Publishes messages to topics
+- The producer is the application or service that creates messages and sends them to Kafka.  
+- Messages are sent to a **topic**, which is a logical category or feed name in Kafka.  
+**Examples:** `user-signup`, `order-events`.
+
+2. Chooses the partition using
+- Kafka topics are split into **partitions** for scalability and parallelism.  
+- The producer decides which partition a message goes to using different strategies:
+
+- **Key hash:** If a message has a key, Kafka uses its hash to determine the partition. This ensures that messages with the same key always go to the same partition, preserving **order**.
+- **Round-robin:** If no key is provided, Kafka distributes messages evenly across partitions in a round-robin manner.
+- **Custom partitioner:** You can define your own logic to choose partitions based on your business requirements.
+
+3. Uses batching, compression, and acknowledgments for performance
+- **Batching:** Producer can send multiple messages together in a batch to reduce network overhead.
+- **Compression:** Messages can be compressed to save bandwidth and storage.
+- **Acknowledgments (acks):**
+  - `acks=0`: Fire-and-forget, fastest but no guarantee.
+  - `acks=1`: Wait for leader acknowledgment.
+  - `acks=all`: Wait for all replicas, ensures maximum durability.
+
+4. Sends required Value, and optionally Key, Timestamp, and Headers
+- **Value:** This is the main content of the message. It is **mandatory**.
+- **Key:** Optional, used for partitioning and ordering.
+- **Timestamp:** Optional; can represent event time (set by producer) or log append time (set by broker).
+- **Headers:** Optional metadata for extra context like correlation IDs, tracing info, or custom tags.
