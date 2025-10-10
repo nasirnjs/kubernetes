@@ -88,6 +88,27 @@ Check always all namespaces by including "--all-namespaces"\
 Start a busybox pod and keep it in the foreground, don't restart it if it exits.\
 `kubectl run -i -t busybox --image=busybox --restart=Never`
 
+## Multi Container Pod
+This output confirms that your pod multi-container-pod has two containers.\
+`kubectl get pod multi-container-pod -o jsonpath='{.spec.containers[*].name}'; echo`
+
+Check logs of each container.
+```
+kubectl logs multi-container-pod -c nginx-container
+kubectl logs multi-container-pod -c busybox-container
+```
+Exec into each container.
+```
+kubectl exec -it multi-container-pod -c nginx-container -- /bin/bash
+kubectl exec -it multi-container-pod -c busybox-container -- /bin/bash
+```
+
+Verify shared volume content.
+```
+kubectl exec -it multi-container-pod -c nginx-container -- ls /usr/share/nginx/html
+kubectl exec -it multi-container-pod -c busybox-container -- cat /usr/share/nginx/html/index.html
+```
+
 ## What is ReplicaSets
 A ReplicaSet is a Kubernetes controller that ensures a specified number of pod replicas are running at any given time. It's part of Kubernetes' core workload resources and is designed to maintain a stable set of replica pods, typically for stateless services.
 
