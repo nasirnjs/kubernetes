@@ -129,6 +129,59 @@ Now scale the ReplicaSet down to 2 PODs.\
 `kubectl scale rs nginx-replicaset --replicas=2`
 
 
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+```
+selector:
+  matchLabels:
+    app: nginx
+```
+
+**The selector tells the ReplicaSet which Pods it should manage.**
+
+- Kubernetes looks for existing Pods in the cluster that have matching labels (app: nginx in this case).
+- Any Pods with this label become part of this ReplicaSet — it will monitor and ensure the desired number of replicas exist.
+- Think of it as: “I (ReplicaSet) will control all Pods that have app=nginx.”
+
+```
+template:
+  metadata:
+    labels:
+      app: nginx
+  spec:
+    containers:
+    - name: nginx-container
+      image: nginx:latest
+```
+**The template defines what each Pod should look like — its blueprint.**
+
+- If the ReplicaSet needs to create new Pods (to reach 3 replicas), it uses this template to build them.
+- Think of it as: “If I need to make new Pods, I’ll use this design.”
+
+**🚨 Important rule.**\
+The labels in the template must match the labels in the selector — otherwise, the ReplicaSet won’t recognize the Pods it created, and it may keep creating new ones endlessly.
+
+**Labels under *template.metadata.labels* and the labels under *selector.matchLabels* must match.**
 
 ## What is a Kubernetes Service?
 The idea of a Service is to group a set of Pod endpoints into a single resource. You can configure various ways to access the grouping. By default, you get a stable cluster IP address that clients inside the cluster can use to contact Pods in the Service. A client sends a request to the stable IP address, and the request is routed to one of the Pods in the Service.
