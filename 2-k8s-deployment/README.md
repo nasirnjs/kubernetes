@@ -231,3 +231,12 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 3
 ```
+
+**Deployment adds powerful management features on top of ReplicaSet**
+| Feature                                              | ReplicaSet | Deployment |
+| ---------------------------------------------------- | ---------- | ---------- |
+| Maintains desired number of Pods                     | ✅ Yes      | ✅ Yes      |
+| Rolling updates (zero downtime)                      | ❌ No       | ✅ Yes      |
+| Rollback to previous versions                        | ❌ No       | ✅ Yes      |
+| Version history (Revisions)                          | ❌ No       | ✅ Yes      |
+| Declarative updates (apply new image/version safely) | ❌ No       | ✅ Yes      |
