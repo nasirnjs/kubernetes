@@ -70,3 +70,20 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ## Steps 4: Deploy sample applications
 
 `kubectl create -f 3.2-ingress-example.yaml`
+
+# Update AWS Load Balancer Controller version
+
+Check Existing Helm Releases.\
+`helm list -n kube-system`
+
+Search for Available Chart Versions.\
+`helm search repo eks/aws-load-balancer-controller --versions`
+
+Before upgrading, check your current values.\
+`helm get values aws-load-balancer-controller -n kube-system`
+
+Upgrade or Downgrade the Release.\
+`helm upgrade aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.3.3 -n kube-system`
+
+Verify the controller’s status.\
+`kubectl get pods -n kube-system -l app.kubernetes.io/name=aws-load-balancer-controller`
