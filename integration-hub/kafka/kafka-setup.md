@@ -2,11 +2,16 @@
 <h2>Apache Kafka KRaft (No Zookeeper) Cluster Setup Guide</h2>
 
 ## 🖥️ Step 1. System Preparation (All Nodes)
-### 🔑 Switch to Root
-`sudo -i`
+**🔑 Switch to Root**.
+```bash
+sudo -i
+```
 
-### 🗂️ Update `/etc/hosts`
-`vim /etc/hosts`
+**🗂️ Update `/etc/hosts`**
+
+```bash
+vim /etc/hosts
+```
 
 ```bash
 172.17.18.200 kafka1
@@ -14,30 +19,31 @@
 172.17.18.202 kafka3
 ```
 
-### 🚫 Disable Swap
+**🚫 Disable Swap**
 ```bash
 swapoff -a
 sed -i '/swap/d' /etc/fstab
 ```
 
-### ☕ Install Java
-`apt update && apt install -y openjdk-21-jre-headless`
+**☕ Install Java**
+```bash
+apt update && apt install -y openjdk-21-jre-headless
+```
 
-🟩 Verify installation.\
-`java -version`
-
-
-
+**Verify installation.**
+```bash
+java -version
+```
 
 
 ## 👤 Step 2. Create Kafka User, Group & Directories (All Nodes)
 
-### Create User & Group
+**Create User & Group**
 ```bash
 groupadd kafka
 useradd -r -s /sbin/nologin -g kafka kafka
 ```
-### Create Directories
+**Create Directories**
 
 ```bash
 mkdir -p /etc/kafka
@@ -53,7 +59,7 @@ wget https://downloads.apache.org/kafka/3.9.0/kafka_2.12-3.9.0.tgz
 tar -xzf kafka_2.12-3.9.0.tgz
 cp -rp kafka_2.12-3.9.0/* /etc/kafka
 ```
-### Set ownership
+**Set ownership**
 ```bash
 chown -R kafka:kafka /data/kafka
 chown -R kafka:kafka /data/log
@@ -71,7 +77,7 @@ chown kafka:kafka jmx_prometheus_javaagent-0.20.0.jar
 chmod 644 jmx_prometheus_javaagent-0.20.0.jar
 ```
 
-### Create JMX Exporter Config
+**Create JMX Exporter Config**
 ```bash
 echo -e "
 rules:
@@ -189,7 +195,7 @@ export KAFKA_CLUSTER_ID=<same_cluster_id>
 /etc/kafka/bin/kafka-storage.sh format -t $KAFKA_CLUSTER_ID -c /etc/kafka/config/kraft/server.properties
 ```
 
-🗂️ To Verify the Cluster ID
+**🗂️ To Verify the Cluster ID**
 
 `cat /data/kafka/meta.properties`
 
