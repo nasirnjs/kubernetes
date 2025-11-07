@@ -1,10 +1,11 @@
 
+<h2>Apache Kafka KRaft (No Zookeeper) Cluster Setup Guide</h2>
 
-# Same as All hosts
-## Switch to Root
+## 🖥️ Step 1. System Preparation (All Nodes)
+### 🔑 Switch to Root
 `sudo -i`
 
-## Update `/etc/hosts`
+### 🗂️ Update `/etc/hosts`
 `vim /etc/hosts`
 
 ```bash
@@ -13,22 +14,30 @@
 172.17.18.202 kafka3
 ```
 
-## Disable Swap
+### 🚫 Disable Swap
 ```bash
 swapoff -a
 sed -i '/swap/d' /etc/fstab
 ```
 
-## Install Java
+### ☕ Install Java
 `apt update && apt install -y openjdk-21-jre-headless`
 
-## Step 2. Create Kafka User and Group (All Node)
+🟩 Verify installation.\
+`java -version`
 
+
+
+
+
+## 👤 Step 2. Create Kafka User, Group & Directories (All Nodes)
+
+### Create User & Group
 ```bash
 groupadd kafka
 useradd -r -s /sbin/nologin -g kafka kafka
 ```
-## Create Directories
+### Create Directories
 
 ```bash
 mkdir -p /etc/kafka
@@ -37,25 +46,21 @@ mkdir -p /data/log/kafka
 ```
 
 
-## Step 3. Download and Install Kafka (All Node)
+## 📦 Step 3. Download and Install Kafka (All Nodes)
 ```bash
 cd /opt
 wget https://downloads.apache.org/kafka/3.9.0/kafka_2.12-3.9.0.tgz
 tar -xzf kafka_2.12-3.9.0.tgz
 cp -rp kafka_2.12-3.9.0/* /etc/kafka
 ```
-## Set ownership
+### Set ownership
 ```bash
 chown -R kafka:kafka /data/kafka
 chown -R kafka:kafka /data/log
 chown -R kafka:kafka /etc/kafka
 ```
-## Step 4. Install JMX Prometheus Exporter (All Node)
+## 📊 Step 4. Install JMX Prometheus Exporter (All Nodes)
 
-<!-- ```bash
-wget https://repo.maven.apache.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.20.0/jmx_prometheus_javaagent-0.20.0.jar
-cp jmx_prometheus_javaagent-0.20.0.jar /etc/kafka/libs/
-``` -->
 ```bash
 cd /etc/kafka/libs
 wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.20.0/jmx_prometheus_javaagent-0.20.0.jar
@@ -66,8 +71,7 @@ chown kafka:kafka jmx_prometheus_javaagent-0.20.0.jar
 chmod 644 jmx_prometheus_javaagent-0.20.0.jar
 ```
 
-Create JMX Exporter Config
-
+### Create JMX Exporter Config
 ```bash
 echo -e "
 rules:
@@ -75,7 +79,7 @@ rules:
 " > /etc/kafka/config/jmx_exporter_kraft.yml
 ```
 
-## Step 5. Configure Log4j Rotation (All Node)
+## 🪵 Step 5. Configure Log4j Rotation & Append rotation policies (All Nodes)
 
 ```bash
 sed -i "s/yyyy-MM-dd-HH/yyyy-MM-dd/g" /etc/kafka/config/log4j.properties
@@ -108,7 +112,7 @@ log4j.appender.authorizerAppender.triggeringPolicy.intervalUnits=days
 ```
 
 
-## Step 6. Create Kafka Systemd Service (All Node)
+## ⚙️ Step 6. Create Kafka Systemd Service (All Nodes)
 
 `vim /etc/systemd/system/kafka.service`
 
@@ -139,10 +143,12 @@ WantedBy=multi-user.target
 ```
 
 
-## Step 7. Kafka Configuration (Copy server.properties for each broker)
+## 🧩 Step 7. Configure Kafka KRaft (All Nodes)
 
+Backup existing config.\
 `cp /etc/kafka/config/kraft/server.properties /etc/kafka/config/kraft/server.properties.backup`
 
+Edit configuration.\
 `vim /etc/kafka/config/kraft/server.properties`
 
 ```bash
@@ -167,7 +173,9 @@ log.segment.bytes=1073741824
 log.retention.check.interval.ms=300000
 ```
 
-## Step 8. Initialize the KRaft Cluster
+## 🔐 Step 8. Initialize the KRaft Cluster
+
+**On the First Node:**
 ```bash
 KAFKA_CLUSTER_ID="$(/etc/kafka/bin/kafka-storage.sh random-uuid)"
 echo $KAFKA_CLUSTER_ID
@@ -185,10 +193,8 @@ export KAFKA_CLUSTER_ID=<same_cluster_id>
 
 `cat /data/kafka/meta.properties`
 
-## 📁 Step 9. Set Permissions
-`chown -R kafka:kafka /data /etc/kafka`
 
-## Step 10. Start Kafka Services
+## 🚀 Step 9. Start Kafka Services
 
 ```bash
 systemctl daemon-reload
@@ -196,9 +202,11 @@ systemctl enable kafka
 systemctl start kafka
 systemctl status kafka
 ```
-
+🟩 Check Service Logs.\
+View the last 50 lines of recent Kafka service logs (systemd journal).\
 `journalctl -u kafka -xe | tail -n 50`
 
+## 🧭 Step 10. Cluster Verification.
 
 Check the Cluster Controller (Leader).\
 `/etc/kafka/bin/kafka-metadata-quorum.sh --bootstrap-server 172.17.18.202:9092 describe --status`
@@ -209,5 +217,5 @@ Verify All Brokers Are Connected.\
 Check broker API versions (to confirm cluster membership).\
 `/etc/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server 172.17.18.200:9092`
 
-
+Prints (shows) the content of the Kafka controller log.\
 `cat /data/log/kafka/controller.log`
