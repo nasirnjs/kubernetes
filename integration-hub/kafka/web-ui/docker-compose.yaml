@@ -1,0 +1,27 @@
+services:
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: kafdrop
+    environment:
+      KAFKA_BROKERCONNECT: "172.17.18.200:9092,172.17.18.201:9092,172.17.18.202:9092"
+      JVM_OPTS: "-Xms32M -Xmx64M"
+      SERVER_PORT: 9000
+    networks:
+      - kafka-net
+
+  kafdrop-nginx:
+    image: nginx:stable-alpine
+    container_name: kafdrop-nginx
+    ports:
+      - "9000:80"
+    volumes:
+      - ./nginx/kafdrop.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    depends_on:
+      - kafdrop
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    external: true
