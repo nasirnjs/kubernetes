@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: velero
+  namespace: velero
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: velero-clusterrole
+  labels:
+    component: velero
+rules:
+  # Core Kubernetes resources
+  - apiGroups: [""]
+    resources: 
+      - "persistentvolumes"
+      - "persistentvolumeclaims"
+      - "namespaces"
+      - "secrets"
+      - "configmaps"
+      - "serviceaccounts"
+      - "nodes"
+    verbs: ["*"]
+  
+  # Pod operations for backup/restore
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec", "pods/log"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  
+  # Secrets specific permissions (for repo credentials)
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  
+  # Apps API group (for daemonsets, deployments, etc.)
+  - apiGroups: ["apps"]
+    resources: ["daemonsets", "deployments", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  
+  # Batch API group (for jobs)
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+  
+  # Discovery permissions - needed for resource enumeration
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["list"]
+  
+  # CRD permissions
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch", "create"]
+  
+  # Velero Custom Resources - THIS IS THE MISSING PART!
+  - apiGroups: ["velero.io"]
+    resources: 
+      - "backups"
+      - "restores"
+      - "schedules"
+      - "downloadrequests"
+      - "podvolumebackups"
+      - "podvolumerestores"
+      - "backupstoragelocations"
+      - "volumesnapshotlocations"
+      - "serverstatusrequests"
+      - "deletebackuprequests"
+      - "backuprepositories"
+      - "datauploads"
+      - "datadownloads"
+    verbs: ["*"]
+  
+  # Storage permissions
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csidrivers", "csinodes", "storageclasses", "volumeattachments"]
+    verbs: ["get", "list", "watch", "create"]
+  
+  # Volume snapshot permissions (for CSI snapshots)
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshots", "volumesnapshotcontents", "volumesnapshotclasses"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  
+  # Events for monitoring
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  # Add these to the rules section of your ClusterRole
+  - apiGroups: ["scheduling.k8s.io"]
+    resources: ["priorityclasses"]
+    verbs: ["get", "list", "watch"]
+  
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["clusterroles", "clusterrolebindings"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: velero-clusterrolebinding
+  labels:
+    component: velero
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: velero-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: velero
+    namespace: velero
