@@ -31,7 +31,7 @@ Retrieve the OIDC provider URL for your cluster:
       "Condition": {
         "StringEquals": {
 		  "<OIDC_PROVIDER>:aud": "sts.amazonaws.com",
-          "<OIDC_PROVIDER>:sub": "ystem:serviceaccount:kube-system:alb-ingress-controller"
+          "<OIDC_PROVIDER>:sub": "stem:serviceaccount:kube-system:alb-ingress-controller"
         }
       }
     }
