@@ -446,6 +446,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable redis-6380 redis-6381
 sudo systemctl start redis-6380 redis-6381
 sudo systemctl status redis-6380
+sudo systemctl stro redis-6380 redis-6381
+
 # check listening
 ss -tlnp | grep redis
 # test local connection
