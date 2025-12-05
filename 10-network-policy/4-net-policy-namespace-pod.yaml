@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: test-network-policy
+  name: allow-erp-and-un-known-namespace-to-database
   namespace: database
 spec:
   podSelector:
@@ -11,8 +11,11 @@ spec:
   - Ingress
   ingress:
   - from:
+    # Allow all pods in erp namespace
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: erp
-
-
+          name: erp
+    # Allow any pod with label app: erp-app in any namespace
+    - podSelector:
+        matchLabels:
+          app: erp-app

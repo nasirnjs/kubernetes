@@ -47,11 +47,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      role: db-external-connect
+      app: db-external-connect
   template:
     metadata:
       labels:
-        role: db-external-connect
+        app: db-external-connect
     spec:
       containers:
       - name: unknown-container

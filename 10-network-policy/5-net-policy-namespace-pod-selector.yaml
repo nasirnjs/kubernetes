@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-erp-and-unknown-to-database
+  namespace: database
+spec:
+  podSelector:
+    matchLabels:
+      app: database-app
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    # Allow all pods in ERP namespace
+    - namespaceSelector:
+        matchLabels:
+          name: erp
+    # Allow specific pods with label app=db-external-connect in un-known namespace
+    - namespaceSelector:
+        matchLabels:
+          name: un-known
+      podSelector:
+        matchLabels:
+          app: db-external-connect

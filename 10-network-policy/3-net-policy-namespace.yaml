@@ -1,18 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allw-from-vms
-  namespace: erp
+  name: allow-erp-namespace-to-database
+  namespace: database
 spec:
-  podSelector: {} # Selects all pods in the erp namespace
+  podSelector:
+    matchLabels:
+      app: database-app
   policyTypes:
   - Ingress
   ingress:
   - from:
-    # Traffic will be allowed if it originates from a pod in the "vms" namespace and has the label `app: frontend`
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: vms
-      podSelector:
-        matchLabels:
-          app: frontend
+          name: erp  # Make sure the erp namespace is labeled with name=erp

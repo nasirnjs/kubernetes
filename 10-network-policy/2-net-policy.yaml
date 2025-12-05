@@ -1,17 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: test-network-policy
-  namespace: erp
+  name: allow-erp-pod-to-database
+  namespace: database
 spec:
   podSelector:
     matchLabels:
-      app: backend
+      app: database-app
   policyTypes:
   - Ingress
   ingress:
   - from:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
-          app: frontend
-  
+          name: erp # Make sure the erp namespace is labeled with name=erp
+      podSelector:
+        matchLabels:
+          app: erp-app
