@@ -108,7 +108,7 @@ maxmemory-policy allkeys-lru
 # Logging / process
 daemonize no
 pidfile /var/run/redis_6380.pid
-logfile /var/log/redis/redis-server-6380.log
+#logfile /var/log/redis/redis-server-6380.log
 
 # Security - use ACLs (see users.acl) or legacy requirepass
 aclfile /etc/redis/users.acl
@@ -168,7 +168,7 @@ maxmemory-policy allkeys-lru
 # -----------------------
 daemonize no                        
 pidfile /var/run/redis_6381.pid
-logfile /var/log/redis/redis-server-6381.log
+#logfile /var/log/redis/redis-server-6381.log
 
 # -----------------------
 # Security
@@ -217,7 +217,7 @@ maxmemory-policy allkeys-lru
 # Logging / process
 daemonize no
 pidfile /var/run/redis_6380.pid
-logfile /var/log/redis/redis-server-6380.log
+#logfile /var/log/redis/redis-server-6380.log
 
 # Security - use ACLs (see users.acl) or legacy requirepass
 aclfile /etc/redis/users.acl
@@ -277,7 +277,7 @@ maxmemory-policy allkeys-lru
 # -----------------------
 daemonize no 
 pidfile /var/run/redis_6381.pid
-logfile /var/log/redis/redis-server-6381.log
+#logfile /var/log/redis/redis-server-6381.log
 
 # -----------------------
 # Security
@@ -326,7 +326,7 @@ maxmemory-policy allkeys-lru
 # Logging / process
 daemonize no
 pidfile /var/run/redis_6380.pid
-logfile /var/log/redis/redis-server-6380.log
+#logfile /var/log/redis/redis-server-6380.log
 
 # Security - use ACLs (see users.acl) or legacy requirepass
 aclfile /etc/redis/users.acl
@@ -378,7 +378,7 @@ maxmemory-policy allkeys-lru
 # Process & Logging
 daemonize no
 pidfile /var/run/redis_6381.pid
-logfile /var/log/redis/redis-server-6381.log
+#logfile /var/log/redis/redis-server-6381.log
 
 # Security
 aclfile /etc/redis/users.acl
