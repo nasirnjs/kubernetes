@@ -42,6 +42,11 @@ helm upgrade --install traefik traefik/traefik \
   -f traefik-values.yaml
 ```
 
+```
+helm list -n traefik
+helm status traefik -n traefik
+```
+
 ## Steps 4: Create a Manual Traefik GatewayClass
 
 ```bash
