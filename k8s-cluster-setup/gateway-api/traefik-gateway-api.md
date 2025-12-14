@@ -31,8 +31,13 @@ This installs Traefik in the 'traefik' namespace, with Gateway API enabled and n
 ```bash
 helm repo add traefik https://traefik.github.io/charts
 helm repo update
+helm search repo traefik/traefik --versions | head
+helm list -n traefik
+```
 
+```bash
 helm upgrade --install traefik traefik/traefik \
+  --version 37.1.1 \
   -n traefik --create-namespace \
   -f traefik-values.yaml
 ```
