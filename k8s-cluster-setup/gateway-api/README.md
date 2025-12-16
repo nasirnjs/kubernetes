@@ -1,4 +1,16 @@
 
+
+<H2>Deploying Traefik Gateway API</h2>
+
+- [Steps 1: Create a namespace for your app](#steps-1-create-a-namespace-for-your-app)
+- [Steps 2: Create Traefik values file](#steps-2-create-traefik-values-file)
+- [Steps 3: Install or upgrade Traefik via Helm](#steps-3-install-or-upgrade-traefik-via-helm)
+- [Steps 4: Create a Manual Traefik GatewayClass](#steps-4-create-a-manual-traefik-gatewayclass)
+- [Steps 5: Gateway definition in 'dev' namespace](#steps-5-gateway-definition-in-dev-namespace)
+- [Steps 6: Nginx Deployment + Service in 'dev' namespace](#steps-6-nginx-deployment--service-in-dev-namespace)
+- [Steps 7: Create HTTPRoute to connect Gateway to Nginx](#steps-7-create-httproute-to-connect-gateway-to-nginx)
+- [Notes](#notes)
+
 ## Steps 1: Create a namespace for your app
 Namespace dev will host your Gateway, HTTPRoute, and Nginx app.
 ```yaml
