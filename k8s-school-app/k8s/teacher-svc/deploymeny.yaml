@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teachersservice
+  namespace: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: teachersservice
+  template:
+    metadata:
+      labels:
+        app: teachersservice
+    spec:
+      containers:
+        - name: teachersservice
+          image: nasirnjs/goteacherssvc:0.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5002
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: app-mongo-secret
+                  key: MONGODB_URI
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-mongo-secret
+                  key: DATABASE_NAME

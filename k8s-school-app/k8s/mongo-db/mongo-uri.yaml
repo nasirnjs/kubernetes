@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-mongo-secret
+  namespace: dev
+type: Opaque
+data:
+  MONGODB_URI: bW9uZ29kYjovL25hc2lyOlBhc3M0QXBwQG1vbmdvOjI3MDE3L2tpbmRlcmdhcnRlbj9hdXRoU291cmNlPWFkbWlu
+  DATABASE_NAME: a2luZGVyZ2FydGVu

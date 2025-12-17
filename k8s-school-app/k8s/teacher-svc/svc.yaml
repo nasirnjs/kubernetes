@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: teachersservice
+  namespace: dev
+spec:
+  selector:
+    app: teachersservice
+  ports:
+    - port: 80
+      targetPort: 5002

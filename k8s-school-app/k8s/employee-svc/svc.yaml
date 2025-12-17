@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: employeeservice
+  namespace: dev
+spec:
+  selector:
+    app: employeeservice
+  ports:
+    - port: 80
+      targetPort: 5003
