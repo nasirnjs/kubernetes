@@ -9,9 +9,9 @@ sudo apt install awscli
 ```
 
 ### **Steps 2: Install ecksctl** 
-Install `eksctl` from [Here](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-eksctl.html)
+Install `eksctl` from [Here](https://docs.aws.amazon.com/eks/latest/eksctl/installation.html) For Linux, use the UNIX instructions.
 
-**Configure AWS CLI**\
+#### Steps 2.1: Configure AWS CLI
 `aws configure`
 
 ### **Steps 3: Set the AWS Region**

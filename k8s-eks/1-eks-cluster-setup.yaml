@@ -1,20 +1,43 @@
-apiVersion: eksctl.io/v1alpha5
+piVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
-
 metadata:
-  name: meetup-may2025
-  region: us-east-2
-  version: "1.31"
+  name: rnd-cluster
+  region: ap-south-1
+  version: "1.33"
+  tags:
+    Environment: Dev
+iam:
+  withOIDC: true
+
+vpc:
+  cidr: 172.31.0.0/16
+  clusterEndpoints:
+    publicAccess: true   
+    privateAccess: false 
+
+availabilityZones:
+  - ap-south-1a
 
 managedNodeGroups:
-  - name: ng-b2
-    instanceTypes: [c5.large]
+  - name: ng-general
+    instanceTypes: 
+      - t3.medium 
     minSize: 1
-    maxSize: 4
+    maxSize: 6
     desiredCapacity: 1
-    volumeSize: 20
+    volumeSize: 40 
+    volumeType: gp3
+    ssh:
+      allow: true   
+      publicKeyName: nasir-ttl
     tags:
-      Environment: Production
+      NodeGroup: General
+      Environment: dev
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
 # iam:
 #   withOIDC: true
 #   podIdentityAssociations:

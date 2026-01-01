@@ -6,7 +6,7 @@ metadata:
     k8s-addon: cluster-autoscaler.addons.k8s.io
     k8s-app: cluster-autoscaler
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::605134426044:role/AmazonEKSClusterAutoscalerRole
+    eks.amazonaws.com/role-arn: arn:aws:iam::045672142170:role/AmazonEKSClusterAutoscalerRole
   name: cluster-autoscaler
   namespace: kube-system
 ---
@@ -148,7 +148,7 @@ spec:
           type: RuntimeDefault
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.31.1
+        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.33.3
           name: cluster-autoscaler
           resources:
             limits:
@@ -164,7 +164,7 @@ spec:
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
             - --expander=least-waste
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/meetup-may2025
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/rnd-cluster
 
           volumeMounts:
             - name: ssl-certs
