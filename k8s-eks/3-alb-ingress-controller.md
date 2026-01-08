@@ -25,13 +25,13 @@ Retrieve the OIDC provider URL for your cluster:
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/<OIDC_PROVIDER>"
+        "Federated": "arn:aws:iam::690894442426044:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989BBJDFD45BB31C0321018"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-		  "<OIDC_PROVIDER>:aud": "sts.amazonaws.com",
-          "<OIDC_PROVIDER>:sub": "stem:serviceaccount:kube-system:alb-ingress-controller"
+          "oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989BBJDFD45BB31C0321018:aud": "sts.amazonaws.com",
+          "oidc.eks.us-east-2.amazonaws.com/id/112F8F36C989BBJDFD45BB31C0321018:sub": "system:serviceaccount:kube-system:alb-ingress-controller"
         }
       }
     }
