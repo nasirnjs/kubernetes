@@ -4,6 +4,7 @@
 - [What is Pod](#what-is-pod)
 - [Key Points about Pods](#key-points-about-pods)
 - [Run simple Pod](#run-simple-pod)
+- [Multi Container Pod](#multi-container-pod)
 - [What is ReplicaSets](#what-is-replicasets)
   - [Key Features:](#key-features)
 - [ReplicaSets Lab](#replicasets-lab)
@@ -243,6 +244,36 @@ spec:
       port: 80
       targetPort: 80
   type: LoadBalancer
+```
+
+```bash
+# nginx-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  selector:
+    app: nginx-pod   # matches Pod label
+  ports:
+    - protocol: TCP
+      port: 80        # ClusterIP port
+      targetPort: 80  # Pod container port
+      nodePort: 32000 # NodePort (optional, can let k8s auto-assign)
 ```
 
 ## Authenticate for private registry
