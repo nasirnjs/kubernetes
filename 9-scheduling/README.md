@@ -1,5 +1,46 @@
+<h2> Scheduling, Preemption and Eviction</h2>
+- [NodeSelector](#nodeselector)
+- [Pod Affinity and anti-affinity](#pod-affinity-and-anti-affinity)
+  - [Pod Affinity](#pod-affinity)
+    - [Definition](#definition)
+    - [Use Case](#use-case)
+    - [What This Does](#what-this-does)
+    - [Pod Affinity (Preferred)](#pod-affinity-preferred)
+    - [What This Does](#what-this-does-1)
+  - [Pod Anti-Affinity](#pod-anti-affinity)
+    - [Definition](#definition-1)
+    - [Use Case](#use-case-1)
+    - [What This Does](#what-this-does-2)
+    - [Pod Anti-Affinity (Preferred)](#pod-anti-affinity-preferred)
+    - [What This Does](#what-this-does-3)
+  - [Node Affinity](#node-affinity)
+    - [Definition](#definition-2)
+    - [Use Case](#use-case-2)
+    - [Step 1: Label the Node](#step-1-label-the-node)
+    - [Step 2: Node Affinity Example](#step-2-node-affinity-example)
+    - [What This Does](#what-this-does-4)
+  - [Quick Comparison Table](#quick-comparison-table)
+  - [Key Takeaway](#key-takeaway)
+    - [DoesNotExist Operator:](#doesnotexist-operator)
+    - [NotIn Operator:](#notin-operator)
+- [Kubernetes Taints \& Tolerations](#kubernetes-taints--tolerations)
+  - [NoSchedule Example](#noschedule-example)
+    - [Taint Node](#taint-node)
+    - [Deployment YAML](#deployment-yaml)
+    - [Remove Taint](#remove-taint)
+  - [PreferNoSchedule Example](#prefernoschedule-example)
+    - [Taint Node](#taint-node-1)
+    - [Deployment YAML](#deployment-yaml-1)
+    - [Remove Taint](#remove-taint-1)
+  - [NoExecute Example](#noexecute-example)
+    - [Taint Node](#taint-node-2)
+    - [Deployment YAML](#deployment-yaml-2)
+    - [Remove Taint](#remove-taint-2)
+  - [Key Points](#key-points)
 
-# nodeSelector
+
+
+# NodeSelector
 
 `kubectl get node k8-worker1 --show-labels `
 
