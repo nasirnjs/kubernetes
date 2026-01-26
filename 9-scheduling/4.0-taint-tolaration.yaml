@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:alpine-perl
+        image: nginx:alpine
         ports:
         - containerPort: 80
       tolerations:

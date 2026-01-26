@@ -1,31 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: NotIn-Operator-deployment
+  name: frontend
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: my-app
+      app: frontend
   template:
     metadata:
       labels:
-        app: my-app
+        app: frontend
     spec:
-      containers:
-      - name: my-container
-        image: nginx
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: environment
-                operator: NotIn
+              - key: app
+                operator: In
                 values:
-                - production
-              - key: type
-                operator: NotIn
-                values:
-                - compute
+                - frontend
             topologyKey: kubernetes.io/hostname
+      containers:
+      - name: frontend
+        image: nginx
+        ports:
+        - containerPort: 80

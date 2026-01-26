@@ -1,26 +1,30 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: Exists-Operator-deployment
+  name: backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: my-app
+      app: backend
   template:
     metadata:
       labels:
-        app: my-app
-        environment: production
+        app: backend
     spec:
-      containers:
-      - name: my-container
-        image: nginx
       affinity:
-        podAntiAffinity:
+        podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: environment
-                operator: Exists
+              - key: app
+                operator: In
+                values:
+                - frontend
             topologyKey: kubernetes.io/hostname
+      containers:
+      - name: backend
+        image: nginx
+        ports:
+        - containerPort: 8080

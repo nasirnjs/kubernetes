@@ -1,5 +1,5 @@
 
-## nodeSelector
+# nodeSelector
 
 `kubectl get node k8-worker1 --show-labels `
 
@@ -15,12 +15,18 @@ If you want to remove the environment=production label from k8-worker1, you woul
 After removing the labels, you can verify that the labels have been successfully removed by running.\
 `kubectl get node k8-worker1 --show-labels`
 
-## Affinity and anti-affinity
+# Pod Affinity and anti-affinity
 [References](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#operators)
 
-1. In Operator:
-Behavior: The label value is present in the supplied set of strings.
-Example: Suppose you have pods labeled with app: frontend, app: backend, and app: database, and you want to schedule a new pod next to the ones labeled frontend or backend.
+## Pod Affinity
+
+### Definition
+- Pod affinity ensures that a pod is scheduled on a node that already has other pods with specific labels.
+
+### Use Case
+- Co-locate services that communicate frequently for low latency.
+- Example: A backend pod that should be close to a frontend pod.
+
 ```yaml
 affinity:
   podAffinity:
@@ -31,58 +37,263 @@ affinity:
           operator: In
           values:
           - frontend
-          - backend
-    topologyKey: kubernetes.io/hostname
+      topologyKey: kubernetes.io/hostname
 ```
-Explanation: This affinity rule ensures that the new pod will be scheduled onto a node that already has pods labeled either app: frontend or app: backend
 
-2. NotIn Operator:
-Behavior: The label value is not contained in the supplied set of strings.
-Example: Suppose you have pods labeled with tier: frontend, tier: backend, and tier: cache, and you want to ensure that a new pod is not scheduled next to the ones labeled cache.
+### What This Does
+- Schedules the pod on a node that already has a pod with `app=frontend`.
+- If no such node exists, the pod stays **Pending**.
+- `topologyKey: kubernetes.io/hostname` ensures co-location on the same node.
+- This is a **hard scheduling rule**.
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - frontend
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: backend
+        image: nginx
+        ports:
+        - containerPort: 8080
+```
+✅ What This Does:
+- The frontend deployment creates 2 pods labeled app=frontend.
+- The backend deployment has podAffinity set with requiredDuringSchedulingIgnoredDuringExecution.
+- Kubernetes will schedule the backend pod on a node that already has at least one frontend pod.
+- If no node has a frontend pod, the backend pod will stay Pending until one becomes available.
+- topologyKey: kubernetes.io/hostname ensures this happens on the same node, not just in the same zone or cluster
+
+### Pod Affinity (Preferred)
+
 ```yaml
 affinity:
-  podAntiAffinity:
+  podAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
     - weight: 100
       podAffinityTerm:
         labelSelector:
-          matchExpressions:
-          - key: tier
-            operator: NotIn
-            values:
-            - cache
+          matchLabels:
+            app: frontend
         topologyKey: kubernetes.io/hostname
 ```
-Explanation: This anti-affinity rule prefers scheduling the new pod away from nodes with pods labeled tier: cache.
 
-3. Exists Operator:
-Behavior: A label with this key exists on the object.
-Example: Suppose you want to schedule a new pod only on nodes that have a specific label, say environment: production.
+### What This Does
+- Kubernetes **tries** to place the pod near frontend pods.
+- If not possible, the pod still schedules.
+- This is a **soft scheduling rule**.
+
+## Pod Anti-Affinity
+
+### Definition
+- Pod anti-affinity ensures that a pod is scheduled on a node that does **NOT** have other pods with specific labels.
+
+### Use Case
+- Spread replicas of a service for high availability.
+- Example: Avoid placing multiple frontend replicas on the same node.
+
 ```yaml
 affinity:
   podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      podAffinityTerm:
-        labelSelector:
-          matchExpressions:
-          - key: environment
-            operator: Exists
-        topologyKey: kubernetes.io/hostname
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - frontend
+      topologyKey: kubernetes.io/hostname
 ```
-4. DoesNotExist Operator:
-Behavior: The DoesNotExist operator is used in label selectors to specify that no label with the specified key exists on the object.
-Example: This configuration ensures that pods scheduled by the Deployment will preferably be placed on nodes where other pods do not have the environment label, thereby enforcing anti-affinity based on the absence of the environment label.
-```yaml
-affinity:
+
+### What This Does
+- Prevents the pod from being scheduled on nodes that already have `app=frontend`.
+- Helps avoid single points of failure.
+- This is a **hard scheduling rule**.
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: environment
-                operator: DoesNotExist
+              - key: app
+                operator: In
+                values:
+                - frontend
             topologyKey: kubernetes.io/hostname
+      containers:
+      - name: frontend
+        image: nginx
+        ports:
+        - containerPort: 80
 ```
+✅ What This Does:
+- Creates 3 frontend pods with the label app=frontend.
+- Pod Anti-Affinity ensures that no two frontend pods will run on the same node (topologyKey: kubernetes.io/hostname).
+- If the cluster has fewer nodes than replicas, some pods will remain Pending until a suitable node becomes available.
+- This improves high availability and reduces the risk of a single node failure affecting all replicas.
+- requiredDuringSchedulingIgnoredDuringExecution is a hard rule — it will not schedule a pod if the rule cannot be satisfied.
+
+### Pod Anti-Affinity (Preferred)
+
+```yaml
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchLabels:
+            app: frontend
+        topologyKey: kubernetes.io/hostname
+```
+
+### What This Does
+- Kubernetes tries to avoid nodes with `app=frontend`.
+- Pod still schedules if unavoidable.
+- This is a **soft scheduling rule**.
+
+
+## Node Affinity
+
+### Definition
+- Node affinity ensures that a pod is scheduled **only on nodes with specific labels**.
+
+### Use Case
+- Run workloads on specific hardware or node pools.
+- Example: GPU workloads, high-memory nodes.
+
+### Step 1: Label the Node
+
+```bash
+kubectl label nodes <node-name> gpu=true
+```
+
+### Step 2: Node Affinity Example
+
+```yaml
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: gpu
+          operator: In
+          values:
+          - "true"
+```
+
+### What This Does
+- Pod is scheduled only on nodes labeled `gpu=true`.
+- If no such node exists, pod remains **Pending**.
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-node-affinity
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-node-affinity
+  template:
+    metadata:
+      labels:
+        app: test-node-affinity
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpu
+                operator: In
+                values:
+                - "true"
+      containers:
+      - name: test-container
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
+✅ What This Does:
+- Node Labeling: Only nodes with gpu=true can run this pod.
+- The deployment requests 2 replicas of gpu-app.
+- Node Affinity ensures pods do not schedule on nodes without GPUs.
+- If no node has the label gpu=true, pods will remain Pending until a labeled node is available.
+- This is useful for workloads that require specific hardware like GPUs, high-memory, or SSD nodes.
+
+
+## Quick Comparison Table
+
+| Affinity Type       | Looks At | Node Labels Needed? | Effect                                | Example Use Case |
+|--------------------|----------|--------------------|---------------------------------------|-----------------|
+| Pod Affinity       | Pods     | ❌ No              | Schedule near specific pods           | Backend near frontend |
+| Pod Anti-Affinity  | Pods     | ❌ No              | Avoid nodes with specific pods        | Spread frontend replicas |
+| Node Affinity      | Nodes    | ✅ Yes             | Schedule only on labeled nodes        | GPU workloads |
+
+
+## Key Takeaway
+
+- **Pod Affinity** → bring pods together  
+- **Pod Anti-Affinity** → keep pods apart  
+- **Node Affinity** → choose where pods are allowed to run
+
 
 ### DoesNotExist Operator:
 - **Purpose**: Specifies that no label with the specified key exists on the object.
@@ -94,39 +305,23 @@ affinity:
 - **Example Use Case**: You might use `NotIn` to avoid scheduling pods next to nodes labeled with certain values, such as avoiding scheduling pods next to nodes labeled `cache`.
 - **Behavior**: Checks for the absence of specific label values within the supplied set of strings. It does not specifically check for the absence of the label itself but rather for specific values.
 
-## Taints and Tolerations
 
-### Taints
-Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.
+# Kubernetes Taints & Tolerations
 
-Effects explained:
-**- NoSchedule:** Pods cannot be scheduled on this node unless they tolerate the taint.
-**- PreferNoSchedule:** Kubernetes tries to avoid scheduling pods without toleration, but it may schedule them if necessary.
-**- NoExecute:** Pods without toleration are evicted immediately if running, and new pods cannot schedule.
+Taints and tolerations work together to control pod scheduling in Kubernetes.
 
-### Tolerations
-Tolerations are applied to pods. Tolerations allow the scheduler to schedule pods with matching taints. Tolerations allow scheduling but don't guarantee scheduling: the scheduler also evaluates other parameters as part of its function.
+- **Taints**: Applied to nodes to repel pods.
+- **Tolerations**: Applied to pods to allow scheduling on tainted nodes.
 
-- Applied to: Pods
-- Purpose: Tolerations allow a pod to be scheduled on nodes with matching taints.
+## NoSchedule Example
+**Goal:** Prevent pods from scheduling on certain nodes unless they tolerate the taint.
 
+### Taint Node
+```bash
+kubectl taint nodes tmp-nabil5 dedicated=backend:NoSchedule
+```
 
-**Operator:** The operator in a toleration defines how the toleration matches a node’s taint.
-
-**1. Equal**
-- The pod tolerates a taint only if both the key AND value match exactly.
-- Use when you want the pod to tolerate a specific taint on a node.
-
-**2. Exists**
-- The pod tolerates a taint if the key exists, ignoring the value.
-- Use when you want the pod to tolerate any value for a given key, or all taints if the key is empty.
-- flexible matching (key only or all keys if key is empty)
-
-
-**NoSchedule Example: Dedicated nodes for certain workloads (e.g., GPU nodes)**
-
-`kubectl taint nodes worker-2 dedicated=backend:NoSchedule`
-
+### Deployment YAML
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -146,7 +341,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:alpine-perl
+        image: nginx:alpine
         ports:
         - containerPort: 80
       tolerations:
@@ -155,23 +350,21 @@ spec:
         value: "backend"
         effect: "NoSchedule"
 ```
-Check nginx-deployment pods tolerations.\
-`kubectl describe pod nginx-deployment | grep -A5 Tolerations`
 
-`kubectl drain worker-1 --ignore-daemonsets --delete-emptydir-data`
+### Remove Taint
+```bash
+kubectl taint nodes tmp-nabil5 dedicated=backend:NoSchedule-
+```
 
-`kubectl run nginx-pod --image=nginx --restart=Never`
+## PreferNoSchedule Example
+**Goal:** Scheduler tries to avoid node but may place pods if necessary.
 
-To remove a taint from a node and check nginx-pod is schedule to worker-2.\
-`kubectl taint nodes worker-2 dedicated=backend:NoSchedule-`
+### Taint Node
+```bash
+kubectl taint nodes tmp-nabil4 optimized=high:PreferNoSchedule
+```
 
-Schedule pods on worker-1 again need to uncordon.\
-`kubectl uncordon worker-1`
-
-**PreferNoSchedule Example: Scheduler tries to avoid placing pods on this node.**
-
-`kubectl taint nodes worker-1 optimized=high:PreferNoSchedule`
-
+### Deployment YAML
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -191,7 +384,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:alpine-perl
+        image: nginx:alpine
         ports:
         - containerPort: 80
       tolerations:
@@ -199,20 +392,62 @@ spec:
         operator: "Exists"
         effect: "PreferNoSchedule"
 ```
-If no other nodes are available or resources require it, the pod may still schedule here.
 
-To remove a taint from a node.\
-`kubectl taint nodes worker-1 optimized:PreferNoSchedule-`
+### Remove Taint
+```bash
+kubectl taint nodes tmp-nabil4 optimized:PreferNoSchedule-
+```
 
+## NoExecute Example
+**Goal:** Evict pods that don’t tolerate the taint and prevent new pods from scheduling.
 
-**NoExecute Example**
+### Taint Node
+```bash
+kubectl taint nodes tmp-nabil3 maintenance=true:NoExecute
+```
 
-`kubectl create deployment my-app --image=nginx --replicas=2`
+### Deployment YAML
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+      tolerations:
+      - key: "maintenance"
+        operator: "Exists"
+        effect: "NoExecute"
+```
 
+### Remove Taint
+```bash
+kubectl taint nodes tmp-nabil3 maintenance:NoExecute-
+```
 
-`kubectl taint nodes worker-2 maintenance=true:NoExecute`
+## Key Points
 
-``
+| Effect            | Node Behavior                          | Pod Behavior                                      |
+|------------------|----------------------------------------|--------------------------------------------------|
+| NoSchedule        | Reject pods without toleration         | Pods with toleration can schedule               |
+| PreferNoSchedule  | Avoid scheduling if possible           | Scheduler may still place pods if needed        |
+| NoExecute         | Evict pods without toleration          | Pods with toleration can stay or schedule       |
+
 
 
 [Reference](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)

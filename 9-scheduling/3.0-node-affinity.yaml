@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-node-affinity
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-node-affinity
+  template:
+    metadata:
+      labels:
+        app: test-node-affinity
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpu
+                operator: In
+                values:
+                - "true"
+      containers:
+      - name: test-container
+        image: nginx
+        ports:
+        - containerPort: 80
