@@ -234,7 +234,7 @@ tcp-backlog 511
 tcp-keepalive 60
 ```
 
-**Node B (192.168.61.121)**, **Redis 6381**
+**Node B (192.168.61.133)**, **Redis 6381**
 
 ```bash
 vim /etc/redis/redis-6381.conf
