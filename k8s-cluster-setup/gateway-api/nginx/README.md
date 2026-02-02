@@ -108,6 +108,11 @@ spec:
       targetPort: 5678
 ```
 
+```bash
+kubectl apply -f sample-app.yaml  
+```
+
+
 ## Step 5: Create HTTPRoute
 
 **Purpose:** HTTPRoute defines how traffic from the Gateway is routed to backend services.
@@ -144,4 +149,11 @@ curl http://192.168.61.72/api/todos
 
 ```bash
 http://172.17.18.230/api/todos
+```
+
+## Uninstall NGINX Gateway Fabric Controller
+
+```bash
+helm uninstall ngf -n nginx-gateway
+kubectl delete namespace nginx-gateway
 ```
