@@ -29,16 +29,20 @@ Update domain **A** record as Ingress controller Public IP.
 
 ## Steps 4: Install Cert Managet.
 Install Cert Manager via helm from [HERE](https://cert-manager.io/docs/installation/helm/) or Default static file install from [HERE](https://cert-manager.io/docs/installation/)\
+
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.2/cert-manager.yaml
+```
 **Recomand to Install via static manifest file, here is the example of Helm**
 ```bash
 helm repo add jetstack https://charts.jetstack.io --force-update
-helm repo update
+
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.14.2 \
-  --set installCRDs=true
+  --version v1.19.2 \
+  --set crds.enabled=true
 ```
 Check cert manager API is ready.\
 `kubectl cert-manager check api`
@@ -56,7 +60,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: nasirnjs@gmail.com
+    email: admin@nasirtechtalks.com
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -73,17 +77,16 @@ kind: Ingress
 metadata:
   name: ingress-services
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: 'true'
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - cloudopsschool.com
-    secretName: letsencrypt-prod
+    - nasirtechtalks.com
+    secretName: nasirtechtalks-tls
   rules:
-  - host: cloudopsschool.com
+  - host: nasirtechtalks.com
     http:
       paths:
       - path: /
