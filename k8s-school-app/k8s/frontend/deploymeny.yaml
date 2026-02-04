@@ -19,14 +19,3 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
-          env:
-            - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: app-mongo-secret
-                  key: MONGODB_URI
-            - name: DATABASE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-mongo-secret
-                  key: DATABASE_NAME
