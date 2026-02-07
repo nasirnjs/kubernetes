@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: schoolmnmfe
-          image: nasirnjs/schaoolmnmfe:0.0.2
+          image: nasirnjs/gostudentsvc:0.0.5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
