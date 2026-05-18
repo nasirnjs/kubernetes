@@ -1,0 +1,8 @@
+# Real credentials — must never be committed
+nginx/kafdrop.htpasswd
+nginx/.htpasswd
+
+# TLS material — must never be committed
+nginx/ssl/*.key
+nginx/ssl/*.crt
+nginx/ssl/*.pem
