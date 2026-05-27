@@ -15,16 +15,6 @@ web-ui/
 └── .gitignore                    # excludes htpasswd + ssl/*
 ```
 
-> **Hardening defaults baked in:**
-> - HTTP → HTTPS redirect, TLS 1.2/1.3 only
-> - HSTS, X-Frame-Options, CSP, X-Content-Type-Options, Referrer-Policy
-> - Basic-auth rate limit (10 req/min per IP, burst 20)
-> - Kafdrop destructive UI ops (delete/create topic) disabled
-> - Kafdrop reachable ONLY via the nginx proxy — private docker network
-> - Resource limits + restart policy on both containers
-
----
-
 ## 1. Create the htpasswd file (DO NOT commit)
 
 The real `kafdrop.htpasswd` is gitignored. Generate it locally with the Apache `htpasswd` tool (uses bcrypt):
@@ -71,8 +61,6 @@ nginx/ssl/kafdrop.crt   # full chain (server cert + intermediates)
 nginx/ssl/kafdrop.key   # private key, chmod 600
 ```
 
----
-
 ## 3. Start the stack
 
 ```bash
@@ -95,20 +83,6 @@ docker compose logs kafdrop | grep -i "connected\|broker"
 
 Open `https://<host>` in a browser → basic-auth prompt → Kafdrop UI.
 
----
-
-## 4. Verify hardening
-
-```bash
-# TLS protocols
-openssl s_client -connect <host>:443 -servername <host> </dev/null 2>/dev/null | grep "Protocol"
-
-# Security headers
-curl -skI https://<host> -u <username>:<password> | grep -iE "strict-transport|x-frame|x-content-type|referrer-policy|content-security"
-
-# Rate limit
-for i in $(seq 1 30); do curl -sk -o /dev/null -w "%{http_code} " https://<host>/; done   # expect 429 after ~10 hits
-```
 
 ---
 
