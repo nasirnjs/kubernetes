@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: ecommerce
+data:
+  PORT: "8080"
+  DB_PORT: "5432"
+  DB_NAME: "ecommerce"
+  DB_SCHEMA: "user_svc"
+  DB_SSLMODE: "disable"
+  JWT_TTL_HOURS: "24"

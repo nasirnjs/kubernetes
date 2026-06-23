@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: ecommerce
+  labels:
+    app: notification-service
+spec:
+  type: ClusterIP
+  selector:
+    app: notification-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP

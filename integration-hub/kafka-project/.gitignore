@@ -1,0 +1,24 @@
+# Go
+*.exe
+*.test
+*.out
+bin/
+vendor/
+
+# Env
+.env
+.env.local
+*.local
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# K8s — never commit real secrets
+k8s/**/secret.local.yaml

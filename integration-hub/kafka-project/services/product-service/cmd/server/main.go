@@ -1,0 +1,87 @@
+package main
+
+import (
+	"context"
+	"errors"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/nasirnjs/ecommerce/product-service/internal/config"
+	"github.com/nasirnjs/ecommerce/product-service/internal/handler"
+	"github.com/nasirnjs/ecommerce/product-service/internal/repository"
+	"github.com/nasirnjs/ecommerce/product-service/internal/service"
+)
+
+func main() {
+	cfg := config.Load()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	pool, err := pgxpool.New(ctx, cfg.DatabaseURL())
+	if err != nil {
+		log.Fatalf("db connect: %v", err)
+	}
+	defer pool.Close()
+
+	if err := pool.Ping(ctx); err != nil {
+		log.Fatalf("db ping: %v", err)
+	}
+
+	repo := repository.NewProductRepository(pool)
+	svc := service.NewProductService(repo)
+	h := handler.NewProductHandler(svc)
+
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(15 * time.Second))
+
+	r.Get("/health", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"ok"}`))
+	})
+
+	r.Route("/api/products", func(r chi.Router) {
+		r.Get("/", h.List)
+		r.Get("/{id}", h.Get)
+		r.Post("/", h.Create)
+		r.Patch("/{id}/stock", h.UpdateStock)
+	})
+
+	srv := &http.Server{
+		Addr:         ":" + cfg.Port,
+		Handler:      r,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	go func() {
+		log.Printf("product-service listening on :%s", cfg.Port)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("server: %v", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	log.Println("shutting down...")
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer shutdownCancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Fatalf("shutdown: %v", err)
+	}
+}
