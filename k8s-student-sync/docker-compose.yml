@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:latest
@@ -12,6 +10,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - app
 
   backend:
     build:
@@ -27,6 +27,9 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
+    networks:
+      - app
+      - elastic-apm-network
 
   frontend:
     build:
@@ -35,7 +38,16 @@ services:
     restart: always
     ports:
       - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
+  elastic-apm-network:
+    external: true
 
 volumes:
   mysql_data:
-

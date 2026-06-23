@@ -1,0 +1,5 @@
+# Environment variables — never commit real secrets
+.env
+
+# elastic-apm.env if used separately
+elastic-apm.env

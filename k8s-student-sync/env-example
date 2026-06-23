@@ -1,6 +1,14 @@
-MYSQL_ROOT_PASSWORD=Rez@ul123
+# ── Application ──────────────────────────────────────────
+MYSQL_ROOT_PASSWORD=YourPassword
 MYSQL_DATABASE=studentdb
 SPRING_PROFILES_ACTIVE=dev
-SPRING_DATASOURCE_USERNAME=root
-SPRING_DATASOURCE_PASSWORD=Rez@ul123
+SPRING_DATASOURCE_USERNAME=yourname
+SPRING_DATASOURCE_PASSWORD=YourPassword
 
+# ── Elastic Stack ─────────────────────────────────────────
+ELASTIC_PASSWORD=changeme
+KIBANA_PASSWORD=changeme
+KIBANA_ENCRYPTION_KEY=y8LjsAjol/mMayayla8WsHCit6nxYZlTV1ed8kDG4+E=
+
+# Shared secret — must match in both APM server and backend agent
+APM_SECRET_TOKEN=647761aa4c3e992bd1c38cc1f274f3104bb9572d

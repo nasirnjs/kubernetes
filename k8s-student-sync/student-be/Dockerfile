@@ -1,35 +1,31 @@
-# Use OpenJDK as the base image for building
-FROM openjdk:17 AS builder
+FROM eclipse-temurin:21 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven Wrapper
 COPY mvnw .
 COPY mvnw.cmd .
 COPY .mvn .mvn
-
-# Copy Maven project files
 COPY pom.xml .
-
-# Copy source code
 COPY src ./src
 
-# Build Spring Boot application
 RUN ./mvnw package -DskipTests
 
-# Use OpenJDK as the base image for running the application
-FROM openjdk:17
+FROM eclipse-temurin:21-jre-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy the built JAR file from the previous stage
+ADD https://repo1.maven.org/maven2/co/elastic/apm/elastic-apm-agent/1.56.0/elastic-apm-agent-1.56.0.jar elastic-apm-agent.jar
+
 COPY --from=builder /app/target/student-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port
 EXPOSE 8080
 
-# Run the Spring Boot application
-CMD ["java", "-jar", "app.jar"]
+# ── Elastic APM Configuration ─────────────────────────────
+# Update ELASTIC_APM_SERVER_URL to point to your APM server
+ENV ELASTIC_APM_SERVER_URL=http://apm-server:8200
+ENV ELASTIC_APM_SERVICE_NAME=student-backend
+ENV ELASTIC_APM_APPLICATION_PACKAGES=studentdot.student
+ENV ELASTIC_APM_ENVIRONMENT=production
+ENV ELASTIC_APM_SECRET_TOKEN=647761aa4c3e992bd1c38cc1f274f3104bb9572d
 
+CMD ["java", "-javaagent:/app/elastic-apm-agent.jar", "-jar", "app.jar"]
