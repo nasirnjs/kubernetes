@@ -1,0 +1,7 @@
+# Kafka Cluster ID — generated once, never change after first start
+# Changing this will make existing data unreadable
+KAFKA_CLUSTER_ID=D136EBB50F16421A82C73A714674E159
+
+# Host IP or hostname advertised to external clients (outside Docker)
+# Change to your machine's IP if connecting from other machines
+KAFKA_ADVERTISED_HOST=192.168.147.194
